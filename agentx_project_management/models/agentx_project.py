@@ -270,6 +270,17 @@ class AgentxProject(models.Model):
                       "Please resolve or cancel them first.")
                     % len(open_bugs)
                 )
+            # Guard: all acceptance records must be accepted before project can close
+            if project.acceptance_ids:
+                not_accepted = project.acceptance_ids.filtered(
+                    lambda a: a.state != 'accepted'
+                )
+                if not_accepted:
+                    raise UserError(
+                        _("Cannot close project: %d acceptance record(s) have not been accepted. "
+                          "All acceptance criteria must be accepted before closing.")
+                        % len(not_accepted)
+                    )
             project.state = 'done'
             project.message_post(body=_("Project closed successfully."))
 

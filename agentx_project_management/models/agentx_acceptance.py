@@ -64,8 +64,8 @@ class AgentxAcceptance(models.Model):
     state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
-            ('in_review', 'In Review'),
-            ('approved', 'Approved'),
+            ('submitted', 'Submitted'),
+            ('accepted', 'Accepted'),
             ('rejected', 'Rejected'),
         ],
         string='Status',
@@ -157,69 +157,140 @@ class AgentxAcceptance(models.Model):
             acceptance.passed_count = len(lines.filtered(lambda l: l.result == 'pass'))
             acceptance.failed_count = len(lines.filtered(lambda l: l.result == 'fail'))
 
+    # ── Helpers ───────────────────────────────────────────────────────────────
+    def _get_customer_partner_ids(self):
+        """Return a list of partner ids to notify (customer contact if set)."""
+        self.ensure_one()
+        partner_ids = []
+        if self.customer_id:
+            partner_ids.append(self.customer_id.id)
+        return partner_ids
+
+    def _subscribe_customer(self):
+        """Add the customer as a follower so they receive chatter notifications."""
+        self.ensure_one()
+        if self.customer_id:
+            self.message_subscribe(partner_ids=[self.customer_id.id])
+
     # ── State machine actions ─────────────────────────────────────────────────
     def action_submit(self):
-        """Transition Draft → In Review."""
+        """Transition Draft → Submitted (sends to customer for review)."""
         for acceptance in self:
             if acceptance.state != 'draft':
-                raise UserError(_("Only draft acceptance records can be submitted for review."))
+                raise UserError(
+                    _("Only draft acceptance records can be submitted.")
+                )
             if not acceptance.criteria_line_ids:
-                raise UserError(_("Please add at least one acceptance criterion before submitting."))
+                raise UserError(
+                    _("Please add at least one acceptance criterion before submitting.")
+                )
+            acceptance._subscribe_customer()
             acceptance.write({
-                'state': 'in_review',
+                'state': 'submitted',
                 'date_submitted': fields.Date.today(),
             })
-            acceptance.message_post(body=_("Acceptance criteria submitted for review."))
+            acceptance.message_post(
+                body=_(
+                    "Acceptance record <b>%s</b> has been submitted to the customer for review. "
+                    "The project team has been notified."
+                ) % acceptance.name,
+                partner_ids=acceptance._get_customer_partner_ids(),
+            )
+            _logger.info(
+                "Acceptance %s (id=%s) submitted for customer review.", acceptance.name, acceptance.id
+            )
 
-    def action_approve(self):
-        """Transition In Review → Approved."""
+    def action_accept(self):
+        """Transition Submitted → Accepted."""
         for acceptance in self:
-            if acceptance.state != 'in_review':
-                raise UserError(_("Only in-review acceptance records can be approved."))
+            if acceptance.state != 'submitted':
+                raise UserError(
+                    _("Only submitted acceptance records can be accepted.")
+                )
             failed = acceptance.criteria_line_ids.filtered(lambda l: l.result == 'fail')
             if failed:
                 raise UserError(
-                    _("Cannot approve: %d criteria are marked as failed.")
+                    _("Cannot accept: %d criteria are still marked as failed. "
+                      "Please resolve them first.")
                     % len(failed)
                 )
             acceptance.write({
-                'state': 'approved',
+                'state': 'accepted',
                 'date_reviewed': fields.Date.today(),
             })
-            acceptance.message_post(body=_("Acceptance criteria approved. Project handover confirmed."))
+            # Notify project team and customer
+            acceptance.message_post(
+                body=_(
+                    "✅ Acceptance record <b>%s</b> has been <b>accepted</b>. "
+                    "Project handover confirmed. Signed off by: %s"
+                ) % (acceptance.name, acceptance.signee_name or _("N/A")),
+                partner_ids=acceptance._get_customer_partner_ids(),
+            )
+            _logger.info(
+                "Acceptance %s (id=%s) accepted.", acceptance.name, acceptance.id
+            )
+            # Inform if all project acceptances are now accepted
+            project = acceptance.project_id
+            if project:
+                all_acceptances = project.acceptance_ids
+                pending = all_acceptances.filtered(lambda a: a.state != 'accepted')
+                if not pending and all_acceptances:
+                    project.message_post(
+                        body=_(
+                            "🎉 All acceptance criteria for this project have been accepted. "
+                            "The project is now eligible to be closed."
+                        )
+                    )
 
     def action_reject(self):
-        """Transition In Review → Rejected."""
+        """Transition Submitted → Rejected (customer raised objections)."""
         for acceptance in self:
-            if acceptance.state != 'in_review':
-                raise UserError(_("Only in-review acceptance records can be rejected."))
+            if acceptance.state != 'submitted':
+                raise UserError(
+                    _("Only submitted acceptance records can be rejected.")
+                )
             acceptance.write({
                 'state': 'rejected',
                 'date_reviewed': fields.Date.today(),
             })
             acceptance.message_post(
-                body=_("Acceptance criteria rejected. Notes: %s") % (acceptance.review_notes or '')
+                body=_(
+                    "❌ Acceptance record <b>%s</b> has been <b>rejected</b> by the customer. "
+                    "Review notes: %s"
+                ) % (acceptance.name, acceptance.review_notes or _("(none)")),
+                partner_ids=acceptance._get_customer_partner_ids(),
+            )
+            _logger.info(
+                "Acceptance %s (id=%s) rejected.", acceptance.name, acceptance.id
             )
 
     def action_resubmit(self):
-        """Transition Rejected → In Review."""
+        """Transition Rejected → Submitted (address objections and resubmit)."""
         for acceptance in self:
             if acceptance.state != 'rejected':
-                raise UserError(_("Only rejected acceptance records can be resubmitted."))
+                raise UserError(
+                    _("Only rejected acceptance records can be resubmitted.")
+                )
             acceptance.write({
-                'state': 'in_review',
+                'state': 'submitted',
                 'date_reviewed': False,
             })
-            acceptance.message_post(body=_("Acceptance criteria resubmitted for review."))
+            acceptance.message_post(
+                body=_(
+                    "Acceptance record <b>%s</b> has been resubmitted to the customer after "
+                    "addressing their objections."
+                ) % acceptance.name,
+                partner_ids=acceptance._get_customer_partner_ids(),
+            )
 
     def action_reset_draft(self):
-        """Transition any state → Draft."""
+        """Transition Submitted/Rejected → Draft."""
         for acceptance in self:
-            if acceptance.state == 'approved':
-                raise UserError(_("Approved acceptance criteria cannot be reset."))
+            if acceptance.state == 'accepted':
+                raise UserError(_("Accepted acceptance records cannot be reset to draft."))
             acceptance.write({
                 'state': 'draft',
                 'date_submitted': False,
                 'date_reviewed': False,
             })
-            acceptance.message_post(body=_("Acceptance criteria reset to draft."))
+            acceptance.message_post(body=_("Acceptance record reset to draft."))

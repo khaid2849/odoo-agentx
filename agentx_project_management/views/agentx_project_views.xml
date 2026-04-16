@@ -184,7 +184,8 @@
                                     <field name="name"/>
                                     <field name="reviewer_id"/>
                                     <field name="state" widget="badge"
-                                           decoration-success="state == 'approved'"
+                                           decoration-success="state == 'accepted'"
+                                           decoration-info="state == 'submitted'"
                                            decoration-danger="state == 'rejected'"/>
                                     <field name="criteria_count"/>
                                     <field name="passed_count"/>
