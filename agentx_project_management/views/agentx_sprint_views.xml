@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- agentx.sprint — List View                                          -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_sprint_list" model="ir.ui.view">
+        <field name="name">agentx.sprint.list</field>
+        <field name="model">agentx.sprint</field>
+        <field name="arch" type="xml">
+            <list string="Sprints"
+                  decoration-success="state == 'completed'"
+                  decoration-info="state == 'active'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-danger="is_overdue">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'completed'"
+                       decoration-info="state == 'active'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="task_count" string="Tasks"/>
+                <field name="done_task_count" string="Done"/>
+                <field name="completion_rate" widget="progressbar"/>
+                <field name="total_story_points" string="SP"/>
+                <field name="velocity" optional="show"/>
+                <field name="is_overdue" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.sprint — Form View                                          -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_sprint_form" model="ir.ui.view">
+        <field name="name">agentx.sprint.form</field>
+        <field name="model">agentx.sprint</field>
+        <field name="arch" type="xml">
+            <form string="Sprint">
+                <header>
+                    <button name="action_start" string="Start Sprint" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_complete" string="Complete Sprint" type="object"
+                            class="btn-primary"
+                            invisible="state != 'active'"
+                            confirm="Are you sure you want to complete this sprint?"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state not in ('draft', 'active')"
+                            confirm="Are you sure you want to cancel this sprint?"/>
+                    <button name="action_reset_to_draft" string="Reset to Planning" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Sprint Name…"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="sequence"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="capacity" string="Planned SP"/>
+                            <field name="total_story_points" string="Actual SP"/>
+                            <field name="velocity" invisible="state != 'completed'"/>
+                            <field name="completion_rate" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group string="Sprint Goal">
+                        <field name="goal" nolabel="1"
+                               placeholder="What will this sprint accomplish?"/>
+                    </group>
+                    <notebook>
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids">
+                                <list decoration-muted="state == 'cancelled'"
+                                      decoration-success="state == 'done'">
+                                    <field name="code" optional="show"/>
+                                    <field name="name"/>
+                                    <field name="task_type"/>
+                                    <field name="assignee_id"/>
+                                    <field name="story_points"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'done'"
+                                           decoration-warning="state == 'blocked'"/>
+                                    <field name="date_deadline" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.sprint — Search View                                        -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_sprint_search" model="ir.ui.view">
+        <field name="name">agentx.sprint.search</field>
+        <field name="model">agentx.sprint</field>
+        <field name="arch" type="xml">
+            <search string="Search Sprints">
+                <field name="name" string="Sprint"/>
+                <field name="project_id"/>
+                <filter string="Active" name="active"
+                        domain="[('state', '=', 'active')]"/>
+                <filter string="Planning" name="planning"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Completed" name="completed"
+                        domain="[('state', '=', 'completed')]"/>
+                <filter string="Overdue" name="overdue"
+                        domain="[('is_overdue', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.sprint — Actions                                            -->
+    <!-- ================================================================== -->
+    <record id="action_agentx_sprint" model="ir.actions.act_window">
+        <field name="name">Sprints</field>
+        <field name="res_model">agentx.sprint</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_agentx_sprint_search"/>
+    </record>
+
+    <record id="action_agentx_sprint_active" model="ir.actions.act_window">
+        <field name="name">Active Sprints</field>
+        <field name="res_model">agentx.sprint</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'active')]</field>
+        <field name="search_view_id" ref="view_agentx_sprint_search"/>
+    </record>
+
+</odoo>

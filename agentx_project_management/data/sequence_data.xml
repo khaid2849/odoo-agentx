@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Task sequence -->
+        <record id="seq_agentx_task" model="ir.sequence">
+            <field name="name">AgentX Task</field>
+            <field name="code">agentx.task</field>
+            <field name="prefix">TASK-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Bug sequence -->
+        <record id="seq_agentx_bug" model="ir.sequence">
+            <field name="name">AgentX Bug</field>
+            <field name="code">agentx.bug</field>
+            <field name="prefix">BUG-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Acceptance criteria sequence -->
+        <record id="seq_agentx_acceptance" model="ir.sequence">
+            <field name="name">AgentX Acceptance</field>
+            <field name="code">agentx.acceptance</field>
+            <field name="prefix">AC-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

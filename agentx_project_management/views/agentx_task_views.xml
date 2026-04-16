@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- agentx.task — List View                                            -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_task_list" model="ir.ui.view">
+        <field name="name">agentx.task.list</field>
+        <field name="model">agentx.task</field>
+        <field name="arch" type="xml">
+            <list string="Tasks"
+                  decoration-muted="state in ('cancelled',)"
+                  decoration-success="state == 'done'"
+                  decoration-warning="state == 'blocked'">
+                <field name="code" optional="show"/>
+                <field name="name"/>
+                <field name="task_type" optional="show"/>
+                <field name="project_id" optional="show"/>
+                <field name="sprint_id" optional="show"/>
+                <field name="assignee_id"/>
+                <field name="story_points" optional="show"/>
+                <field name="estimated_hours" optional="show"/>
+                <field name="actual_hours" optional="show"/>
+                <field name="priority" widget="priority"/>
+                <field name="date_deadline" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'blocked'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="tag_ids" widget="many2many_tags" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.task — Form View                                            -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_task_form" model="ir.ui.view">
+        <field name="name">agentx.task.form</field>
+        <field name="model">agentx.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <header>
+                    <button name="action_plan" string="Add to Sprint" type="object"
+                            class="btn-primary"
+                            invisible="state != 'backlog'"/>
+                    <button name="action_start" string="Start" type="object"
+                            class="btn-primary"
+                            invisible="state not in ('todo', 'blocked')"/>
+                    <button name="action_block" string="Mark Blocked" type="object"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_unblock" string="Unblock" type="object"
+                            class="btn-primary"
+                            invisible="state != 'blocked'"/>
+                    <button name="action_done" string="Mark Done" type="object"
+                            class="btn-primary"
+                            invisible="state not in ('in_progress', 'todo')"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('done', 'cancelled')"
+                            confirm="Cancel this task?"/>
+                    <button name="action_reopen" string="Reopen" type="object"
+                            invisible="state not in ('done', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="backlog,todo,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Task Title…"/>
+                        </h1>
+                        <div>
+                            <field name="code" class="text-muted" readonly="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="task_type"/>
+                            <field name="project_id"/>
+                            <field name="sprint_id"
+                                   domain="[('project_id', '=', project_id), ('state', 'in', ['draft', 'active'])]"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="assignee_id"/>
+                            <field name="reviewer_id"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Estimates">
+                            <field name="story_points"/>
+                            <field name="estimated_hours"/>
+                            <field name="actual_hours" readonly="1"/>
+                        </group>
+                        <group string="Dates">
+                            <field name="date_started" readonly="1"/>
+                            <field name="date_done" readonly="1"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'blocked'">
+                        <field name="block_reason" placeholder="Describe what is blocking this task…"/>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"
+                                   placeholder="Describe the task…"/>
+                        </page>
+                        <page string="Acceptance Criteria" name="acceptance">
+                            <field name="acceptance_criteria" nolabel="1"
+                                   placeholder="What criteria must be met for this task to be done?"/>
+                        </page>
+                        <page string="Timesheets" name="timesheets">
+                            <field name="timesheet_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="employee_id"/>
+                                    <field name="name" string="Description"/>
+                                    <field name="unit_amount" string="Hours"
+                                           widget="timesheet_uom"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="actual_hours" widget="timesheet_uom"
+                                       string="Total Hours"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.task — Kanban View                                          -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_task_kanban" model="ir.ui.view">
+        <field name="name">agentx.task.kanban</field>
+        <field name="model">agentx.task</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="assignee_id"/>
+                <field name="story_points"/>
+                <field name="tag_ids"/>
+                <field name="date_deadline"/>
+                <progressbar field="state"
+                             colors='{"done": "success", "blocked": "danger", "in_progress": "warning"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <span class="o_kanban_record_subtitle text-muted">
+                                            <field name="code"/>
+                                        </span>
+                                    </div>
+                                    <field name="priority" widget="priority" readonly="1"/>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <field name="tag_ids" widget="many2many_tags"
+                                           options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.story_points.value" class="badge bg-secondary">
+                                            SP: <t t-esc="record.story_points.value"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="assignee_id"
+                                               widget="many2one_avatar_employee"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.task — Search View                                          -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_task_search" model="ir.ui.view">
+        <field name="name">agentx.task.search</field>
+        <field name="model">agentx.task</field>
+        <field name="arch" type="xml">
+            <search string="Search Tasks">
+                <field name="name" string="Task"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <field name="sprint_id"/>
+                <field name="assignee_id"/>
+                <field name="tag_ids"/>
+                <filter string="My Tasks" name="my_tasks"
+                        domain="[('assignee_id.user_id', '=', uid)]"/>
+                <filter string="Backlog" name="backlog"
+                        domain="[('state', '=', 'backlog')]"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Blocked" name="blocked"
+                        domain="[('state', '=', 'blocked')]"/>
+                <filter string="Done" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Overdue" name="overdue"
+                        domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')),
+                                 ('state', 'not in', ['done', 'cancelled'])]"/>
+                <separator/>
+                <filter string="User Stories" name="user_stories"
+                        domain="[('task_type', '=', 'story')]"/>
+                <filter string="Tasks" name="tasks_only"
+                        domain="[('task_type', '=', 'task')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Sprint" name="group_sprint"
+                            context="{'group_by': 'sprint_id'}"/>
+                    <filter string="Assignee" name="group_assignee"
+                            context="{'group_by': 'assignee_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Type" name="group_type"
+                            context="{'group_by': 'task_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.task — Actions                                              -->
+    <!-- ================================================================== -->
+    <record id="action_agentx_task" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">agentx.task</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_agentx_task_search"/>
+        <field name="context">{'search_default_in_progress': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks yet!
+            </p>
+            <p>Create tasks and user stories to track your work.</p>
+        </field>
+    </record>
+
+    <record id="action_agentx_task_my" model="ir.actions.act_window">
+        <field name="name">My Tasks</field>
+        <field name="res_model">agentx.task</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('assignee_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_agentx_task_search"/>
+    </record>
+
+    <record id="action_agentx_task_backlog" model="ir.actions.act_window">
+        <field name="name">Backlog</field>
+        <field name="res_model">agentx.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'backlog')]</field>
+        <field name="context">{'group_by': 'project_id'}</field>
+        <field name="search_view_id" ref="view_agentx_task_search"/>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.tag — Action (for Configuration menu)                       -->
+    <!-- ================================================================== -->
+    <record id="action_agentx_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">agentx.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- agentx.bug — List View                                             -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_bug_list" model="ir.ui.view">
+        <field name="name">agentx.bug.list</field>
+        <field name="model">agentx.bug</field>
+        <field name="arch" type="xml">
+            <list string="Bugs"
+                  decoration-muted="state in ('closed', 'cancelled')"
+                  decoration-danger="priority == '3'"
+                  decoration-warning="severity == 'blocker'">
+                <field name="code" optional="show"/>
+                <field name="name"/>
+                <field name="project_id" optional="show"/>
+                <field name="sprint_id" optional="show"/>
+                <field name="assignee_id"/>
+                <field name="reported_by" optional="show"/>
+                <field name="severity" widget="badge"
+                       decoration-danger="severity in ('critical', 'blocker')"
+                       decoration-warning="severity == 'major'"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-warning="state == 'resolved'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="date_reported" optional="show"/>
+                <field name="date_resolved" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.bug — Form View                                             -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_bug_form" model="ir.ui.view">
+        <field name="name">agentx.bug.form</field>
+        <field name="model">agentx.bug</field>
+        <field name="arch" type="xml">
+            <form string="Bug">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_start_fix" string="Start Fix" type="object"
+                            class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_resolve" string="Mark Resolved" type="object"
+                            class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_close" string="Close" type="object"
+                            class="btn-primary"
+                            invisible="state != 'resolved'"
+                            confirm="Confirm that the bug is fully closed?"/>
+                    <button name="action_reopen" string="Reopen" type="object"
+                            invisible="state != 'resolved'"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('closed', 'cancelled')"
+                            confirm="Cancel this bug?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,confirmed,in_progress,resolved,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Bug Title…"/>
+                        </h1>
+                        <div>
+                            <field name="code" class="text-muted" readonly="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="sprint_id"
+                                   domain="[('project_id', '=', project_id)]"/>
+                            <field name="related_task_id"
+                                   domain="[('project_id', '=', project_id)]"/>
+                            <field name="environment"/>
+                        </group>
+                        <group>
+                            <field name="severity"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="assignee_id"/>
+                            <field name="reported_by"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="date_reported"/>
+                            <field name="date_confirmed" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date_resolved" readonly="1"/>
+                            <field name="date_closed" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                        <page string="Reproduction Steps" name="repro">
+                            <group>
+                                <field name="steps_to_reproduce" nolabel="1"
+                                       placeholder="1. Go to…&#10;2. Click on…&#10;3. Observe…"/>
+                            </group>
+                            <group string="Expected vs Actual">
+                                <field name="expected_behavior"
+                                       placeholder="What should happen…"/>
+                                <field name="actual_behavior"
+                                       placeholder="What actually happens…"/>
+                            </group>
+                        </page>
+                        <page string="Resolution" name="resolution"
+                              invisible="state not in ('resolved', 'closed')">
+                            <field name="resolution" nolabel="1"
+                                   placeholder="Describe the fix applied…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.bug — Search View                                           -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_bug_search" model="ir.ui.view">
+        <field name="name">agentx.bug.search</field>
+        <field name="model">agentx.bug</field>
+        <field name="arch" type="xml">
+            <search string="Search Bugs">
+                <field name="name" string="Bug"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <field name="assignee_id"/>
+                <field name="reported_by"/>
+                <filter string="My Bugs" name="my_bugs"
+                        domain="[('assignee_id.user_id', '=', uid)]"/>
+                <filter string="New" name="new"
+                        domain="[('state', '=', 'new')]"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('state', 'in', ('confirmed', 'in_progress'))]"/>
+                <filter string="Resolved" name="resolved"
+                        domain="[('state', '=', 'resolved')]"/>
+                <filter string="Open" name="open"
+                        domain="[('state', 'not in', ('closed', 'cancelled'))]"/>
+                <separator/>
+                <filter string="Critical" name="critical"
+                        domain="[('priority', '=', '3')]"/>
+                <filter string="Blocker" name="blocker"
+                        domain="[('severity', '=', 'blocker')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Severity" name="group_severity"
+                            context="{'group_by': 'severity'}"/>
+                    <filter string="Assignee" name="group_assignee"
+                            context="{'group_by': 'assignee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.bug — Actions                                               -->
+    <!-- ================================================================== -->
+    <record id="action_agentx_bug" model="ir.actions.act_window">
+        <field name="name">Bugs</field>
+        <field name="res_model">agentx.bug</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_agentx_bug_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No bugs reported!
+            </p>
+            <p>Track and manage software defects here.</p>
+        </field>
+    </record>
+
+    <record id="action_agentx_bug_my" model="ir.actions.act_window">
+        <field name="name">My Bugs</field>
+        <field name="res_model">agentx.bug</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('assignee_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_agentx_bug_search"/>
+    </record>
+
+</odoo>
