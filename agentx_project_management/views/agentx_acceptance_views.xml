@@ -58,6 +58,9 @@
                             invisible="state != 'rejected'"/>
                     <button name="action_reset_draft" string="Reset to Draft" type="object"
                             invisible="state == 'accepted'"/>
+                    <button name="action_report_agentx_acceptance"
+                            string="Print PDF" type="action"
+                            class="btn-secondary"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,accepted"/>
                 </header>

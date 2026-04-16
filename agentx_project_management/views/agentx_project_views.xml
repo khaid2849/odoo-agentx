@@ -83,6 +83,9 @@
                                 class="oe_stat_button" icon="fa-file-text-o">
                             <field name="request_count" widget="statinfo" string="Requests"/>
                         </button>
+                        <button class="oe_stat_button" icon="fa-clock-o" readonly="1">
+                            <field name="actual_hours" widget="statinfo" string="Hours Logged"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
