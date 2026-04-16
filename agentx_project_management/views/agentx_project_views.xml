@@ -8,14 +8,16 @@
         <field name="name">agentx.project.list</field>
         <field name="model">agentx.project</field>
         <field name="arch" type="xml">
-            <list string="Projects" decoration-muted="state == 'cancelled'"
+            <list string="Projects"
+                  default_order="name"
+                  decoration-muted="state == 'cancelled'"
                   decoration-success="state == 'done'"
                   decoration-info="state == 'active'"
                   decoration-warning="state == 'on_hold'">
                 <field name="code" optional="show"/>
                 <field name="name"/>
-                <field name="manager_id"/>
-                <field name="customer_id" optional="show"/>
+                <field name="customer_id"/>
+                <field name="team_lead_id" optional="show"/>
                 <field name="date_start"/>
                 <field name="date_end" optional="show"/>
                 <field name="priority" widget="priority"/>
@@ -266,6 +268,7 @@
                 <field name="name" string="Project"/>
                 <field name="code"/>
                 <field name="manager_id"/>
+                <field name="team_lead_id"/>
                 <field name="customer_id"/>
                 <filter string="Active" name="active"
                         domain="[('state', '=', 'active')]"/>
@@ -285,6 +288,8 @@
                             context="{'group_by': 'state'}"/>
                     <filter string="Manager" name="group_manager"
                             context="{'group_by': 'manager_id'}"/>
+                    <filter string="Team Lead" name="group_team_lead"
+                            context="{'group_by': 'team_lead_id'}"/>
                     <filter string="Customer" name="group_customer"
                             context="{'group_by': 'customer_id'}"/>
                 </group>

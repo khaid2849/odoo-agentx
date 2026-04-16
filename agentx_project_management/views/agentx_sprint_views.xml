@@ -9,6 +9,7 @@
         <field name="model">agentx.sprint</field>
         <field name="arch" type="xml">
             <list string="Sprints"
+                  default_order="date_start"
                   decoration-success="state == 'completed'"
                   decoration-info="state == 'active'"
                   decoration-muted="state == 'cancelled'"

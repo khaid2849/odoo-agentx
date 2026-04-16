@@ -186,6 +186,11 @@
                 <filter string="Rejected" name="rejected"
                         domain="[('state', '=', 'rejected')]"/>
                 <separator/>
+                <filter string="High Priority" name="priority_high"
+                        domain="[('priority', 'in', ('2', '3'))]"/>
+                <filter string="Normal Priority" name="priority_normal"
+                        domain="[('priority', 'in', ('0', '1'))]"/>
+                <separator/>
                 <filter string="My Requests" name="my_requests"
                         domain="[('assigned_to_id.user_id', '=', uid)]"/>
                 <group expand="0" string="Group By">
