@@ -1,10 +1,10 @@
-# Code Review Report — ODO-24: Access Control & Security
+# Code Review Report — ODO-23: Views Part 3: Kanban, Search & Menu
 
 **Date:** 2026-04-16
-**Reviewer:** Reviewer Agent (ODO Agent Pipeline)
-**PR:** https://github.com/khaid2849/odoo-agentx/pull/8
-**Branch:** `feature/odo-14.10`
-**Decision:** **NEEDS REVISION** — 4 Blocking CRs open
+**Reviewer:** Reviewer Agent (OdooAgentX Pipeline)
+**PR:** https://github.com/khaid2849/odoo-agentx/pull/7
+**Branch:** `feature/odo-14.9`
+**Decision:** **NEEDS REVISION** — 3 Blocking CRs open
 
 ---
 
@@ -12,144 +12,162 @@
 
 **NEEDS REVISION**
 
-Four blocking findings prevent merge. Three are security over-grants (Users receiving write access on models where they should be read-only per spec), and one is missing test coverage for all security-critical paths. Non-blocking findings document scope deviations and design inconsistencies that require PM acknowledgment.
+Three blocking findings prevent merge approval. Two relate to `agentx.sprint.is_overdue` (non-stored computed field used in a search domain — runtime crash) and one is a stale state value in the acceptance report QWeb template that breaks the status badge rendering. All three are small, targeted fixes. Non-blocking findings cover task_type deviation from spec, missing tests, and minor UX/naming gaps.
 
 ---
 
 ## Scope of Review
 
-This PR implements Sub-Goal 5 security work for `agentx_project_management` including:
-- 4 security groups (`viewer`, `user`, `manager`, `admin`)
-- 44 ACL rows covering 11 models × 4 groups
-- 2 record rules (project access, task write restriction)
-- Full module scaffold (31 files, 4201 additions)
+This PR implements the complete `agentx_project_management` Odoo 18 module (31 files, 4182 additions). Review covered:
 
-Review focused on `security/security.xml`, `security/ir.model.access.csv`, record rule domain validity, and cross-file consistency checks.
+- Sprint kanban view (ODO-23 primary scope)
+- Task kanban and search views (pre-existing, verified)
+- Menu structure completeness against spec Section 4
+- All model definitions for ORM correctness
+- Security (ACL, record rules, group hierarchy)
+- Manifest and module integrity
+- Cross-file consistency (field names, state values, group references)
+- Report template state value alignment
 
 ---
 
 ## Blocking Findings
 
 ### CR-1 [Blocking]
-- **File:** `security/ir.model.access.csv`
-- **Line:** Row `access_agentx_customer_request_user`
-- **Dimension:** Security — ACL
-- **Problem:** User group has `perm_write=1` for `agentx.customer.request`. Spec states "Team Member: CR customer.request" (Create + Read only). Write/Update is not authorized for this group on this model. This allows team members to modify customer requests created by others.
-- **Source reference:** ODO-24 task description — "Team Member: CR customer.request, CRUD task (own only), R others"
-- **Recommended fix:** Change `perm_write` to `0` for `access_agentx_customer_request_user`.
+- **File:** `models/agentx_sprint.py` lines 112–115
+- **File:** `views/agentx_sprint_views.xml` line 178
+- **Dimension:** ORM and Backend Logic / XML Views
+- **Problem:** `agentx.sprint.is_overdue` is a non-stored computed field (`store` not set, defaults `False`) with no `search` method. The sprint search view uses `domain="[('is_overdue', '=', True)]"`. At runtime, applying this filter raises `ValueError: Cannot search on non-stored field agentx.sprint.is_overdue`. Contrast with `agentx.milestone.is_overdue` which correctly has `store=True`.
+- **Source reference:** Odoo ORM — computed fields must be `store=True` or define a `search=` callback to be searchable.
+- **Recommended fix:**
+  ```python
+  is_overdue = fields.Boolean(
+      compute='_compute_is_overdue',
+      string='Overdue',
+      store=True,
+  )
+  ```
+  Also add `@api.depends('state', 'date_end')` to `_compute_is_overdue` (see CR-2).
 - **Status:** Open
 
 ---
 
 ### CR-2 [Blocking]
-- **File:** `security/ir.model.access.csv`
-- **Line:** Row `access_agentx_bug_user`
-- **Dimension:** Security — ACL
-- **Problem:** User group has `perm_write=1, perm_create=1` for `agentx.bug`. Spec states "Team Member: R others" — bugs fall under "others" and should be read-only for this group. This allows team members to create and modify bugs without restriction.
-- **Source reference:** ODO-24 task description — "R others" covers agentx.bug
-- **Recommended fix:** Change `perm_write` and `perm_create` to `0` for `access_agentx_bug_user`.
+- **File:** `models/agentx_sprint.py` line 177
+- **Dimension:** ORM — Computed Field Dependencies
+- **Problem:** `_compute_is_overdue` on `agentx.sprint` has no `@api.depends` decorator. Without it, once `is_overdue` is made `store=True` (CR-1 fix), the field will never recompute automatically when `state` or `date_end` changes — it will stay stale at its create-time value forever.
+- **Source reference:** Odoo ORM docs — stored computed fields require `@api.depends` to trigger recomputation on field changes.
+- **Recommended fix:**
+  ```python
+  @api.depends('state', 'date_end')
+  def _compute_is_overdue(self):
+      today = fields.Date.today()
+      for sprint in self:
+          sprint.is_overdue = (
+              sprint.state == 'active'
+              and sprint.date_end
+              and sprint.date_end < today
+          )
+  ```
 - **Status:** Open
+
+> **Note:** CR-1 and CR-2 must be fixed together in a single commit.
 
 ---
 
 ### CR-3 [Blocking]
-- **File:** `security/ir.model.access.csv`
-- **Lines:** Rows `access_agentx_acceptance_user` and `access_agentx_acceptance_line_user`
-- **Dimension:** Security — ACL
-- **Problem:** User group has `perm_write=1, perm_create=1` for `agentx.acceptance` and `agentx.acceptance.line`. Spec states "Team Member: R others". Acceptance records are formal handover documentation — write access for team members is a data integrity risk.
-- **Source reference:** ODO-24 task description — "R others" covers agentx.acceptance
-- **Recommended fix:** Change `perm_write` and `perm_create` to `0` for user rows on both models.
-- **Status:** Open
-
----
-
-### CR-4 [Blocking]
-- **File:** `tests/__init__.py`
-- **Dimension:** Testing
-- **Problem:** `tests/__init__.py` contains only a comment header. No test classes exist in the tests directory. Security-critical paths have zero automated coverage. The following paths are entirely untested:
-  - Viewer cannot write any model
-  - Member cannot write projects (record rule)
-  - Member can only write own tasks (record rule)
-  - Member can create but not write customer.requests
-  - Manager has full CRUD on all models
-  - Admin delete permissions
-- **Source reference:** AGENTS.md §Testing — "Critical flows are not happy-path only"; Odoo review dimension #6 Testing
-- **Recommended fix:** Implement `tests/test_access_control.py` with `TransactionCase` tests for each group and record rule combination.
+- **File:** `reports/report_acceptance_template.xml` lines 22–24
+- **Dimension:** XML Views / Cross-File Consistency
+- **Problem:** The QWeb acceptance report template uses stale state values from the pre-ODO-18 model: `o.state == 'approved'` and `o.state == 'in_review'`. After the ODO-18 acceptance state machine refactor, these values were renamed to `accepted` and `submitted`. Since no `agentx.acceptance` record can ever have state `approved` or `in_review`, the status badge always falls through to `bg-secondary` (grey) for all accepted and submitted records.
+- **Source reference:** `models/agentx_acceptance.py` state field — valid values: `draft`, `submitted`, `accepted`, `rejected`.
+- **Recommended fix:**
+  ```python
+  #{ 'bg-success' if o.state == 'accepted' else
+     'bg-danger' if o.state == 'rejected' else
+     'bg-info' if o.state == 'submitted' else 'bg-secondary' }
+  ```
 - **Status:** Open
 
 ---
 
 ## Non-Blocking Findings
 
+### CR-4 [Non-Blocking]
+- **File:** `tests/__init__.py`
+- **Dimension:** Testing
+- **Problem:** `tests/__init__.py` is empty. No unit or integration tests exist. Critical business logic paths — state machine constraints (CHK-01 through CHK-06), one-active-sprint guard, acceptance gate for project closure, computed field behavior — have zero test coverage.
+- **Recommended fix:** Add `TransactionCase` tests for state machine transitions, constraint enforcement, and computed field values. At minimum cover CHK-03, CHK-05, CHK-06 and the sprint one-active guard.
+- **Status:** Open (for tracking; does not block this PR)
+
+---
+
 ### CR-5 [Non-Blocking]
-- **File:** `security/security.xml`
-- **Dimension:** Blueprint alignment
-- **Problem:** Group XML IDs deviate from spec-defined names. Spec requires `group_agentx_project_manager`, `group_agentx_project_member`, `group_agentx_project_viewer`. Implementation uses `group_agentx_manager`, `group_agentx_user`, `group_agentx_viewer`. External modules or automation referencing spec XML IDs will receive "External ID not found" errors.
-- **Recommended fix:** Align XML IDs with spec or obtain PM approval for naming deviation and document it in blueprint.
-- **Status:** Open
+- **File:** `models/agentx_task.py` lines 41–51
+- **Dimension:** Architecture / Spec Alignment
+- **Problem:** `task_type` selection values (`story`, `task`, `improvement`) deviate from the technical spec (`feature`, `bug`, `improvement`, `research`, `documentation`). The implemented set is a different, smaller set. The search view filters (`User Stories`, `Tasks`) reflect the implemented set correctly, but the spec alignment gap should be acknowledged.
+- **Recommended fix:** Confirm with PM/Architect whether this deviation was approved. If so, update the spec. If not, align to spec values.
+- **Status:** Open (PM decision required)
 
 ---
 
 ### CR-6 [Non-Blocking]
-- **File:** `security/security.xml`
-- **Dimension:** Scope control
-- **Problem:** `group_agentx_admin` was introduced beyond the approved spec scope (spec defines 3 groups). The design rationale (segregating destructive delete into a dedicated admin tier above manager) is architecturally sound but represents an unauthorized scope expansion that was not reviewed or approved by PM.
-- **Recommended fix:** Obtain PM approval to retain `group_agentx_admin`, or remove it and merge its delete permissions into `group_agentx_manager`.
+- **File:** `views/menu_views.xml` line 9
+- **Dimension:** Spec Alignment
+- **Problem:** Root menu label is `AgentX PM`. Spec (Section 4 — Menu Structure) specifies `AgentX Projects`.
+- **Recommended fix:** Either rename the menu to `AgentX Projects` or document the deviation.
 - **Status:** Open
 
 ---
 
 ### CR-7 [Non-Blocking]
-- **File:** `security/ir.model.access.csv`
-- **Dimension:** ACL consistency
-- **Problem:** Manager delete permissions are inconsistent across models. Manager has `perm_unlink=0` for: project, customer.request, sprint, task, bug. Manager has `perm_unlink=1` for: team.member, milestone, acceptance, acceptance.line, tag, resource.allocation. The spec states "Project Manager: CRUD all models" which includes delete. No documented rationale for the split.
-- **Recommended fix:** (a) Grant manager delete on all models per spec, or (b) document the two-tier model and get PM approval.
-- **Status:** Open
-
----
-
-### CR-8 [Non-Blocking]
-- **File:** `security/security.xml` — `rule_agentx_task_user`
-- **Dimension:** Record rules / ORM
-- **Problem:** Task record rule sets `perm_write=True` only. Members can read ALL tasks (no read restriction) and create tasks for any assignee (no create restriction). Spec states "CRUD task (own only)" implying all four operations should be scoped to own records.
-- **Recommended fix:** Evaluate with PM whether full-read on all tasks is acceptable. If "own only" must apply to reads, add `perm_read=True` to the task rule and set appropriate domain.
+- **File:** `views/agentx_task_views.xml` lines 256–268 / `views/menu_views.xml` line 58
+- **Dimension:** XML Views / Spec Alignment
+- **Problem:** "Task Board" menu (`menu_agentx_task_board`) references `action_agentx_task` which opens in `list` mode first (`view_mode=list,kanban,form`). Spec Section 4 defines "Task Board → task kanban (all projects)". The user must manually switch to kanban.
+- **Recommended fix:** Add `view_type: 'kanban'` to the action context, or create a dedicated action with `view_mode=kanban,list,form` for the Task Board menu item.
 - **Status:** Open
 
 ---
 
 ## Positive Notes
 
-1. **Group hierarchy** — `viewer ← user ← manager ← admin` correctly implemented using `implied_ids`. Inheritance chain is sound and will propagate permissions cleanly.
+1. **Sprint kanban correctness** — `view_agentx_sprint_kanban` is well-structured: `default_group_by="state"`, loads all required fields, cards show name, end date, `completion_rate` progressbar, task count, and SP progress. Spec requirement satisfied.
 
-2. **Record rule domains** — Both rule domain expressions are valid Odoo ORM path expressions:
-   - `allocation_ids.employee_id.user_id` correctly traverses `agentx.project → agentx.team.member → hr.employee → res.users`
-   - `assignee_id.user_id` and `project_id.manager_id.user_id` correctly resolve for the task rule
+2. **Task search view completeness** — All spec-required filters present and correctly wired: My Tasks (`assignee_id.user_id = uid`), Overdue (deadline < today AND not done/cancelled), GroupBy Sprint/Assignee/State/Type. Well beyond spec minimum.
 
-3. **Project access rule** — `rule_agentx_project_user` correctly restricts member read access to projects where they are manager, team_lead, or allocated resource. This matches the spec requirement and covers the `team_lead_id` field fix noted in the Coder's delivery message.
+3. **Task kanban polish** — Uses `many2one_avatar_employee` widget for assignee, `many2many_tags` with color support for tags, `progressbar` per column — clean, idiomatic Odoo 18 kanban.
 
-4. **ACL completeness** — All 11 new models are protected. No model is left without an ACL entry. `account.analytic.line` (inherited) correctly relies on base module ACL.
+4. **Security group hierarchy** — `viewer → user → manager → admin` chain via `implied_ids` is correct. All menus properly guard with appropriate group levels.
 
-5. **Manifest load order** — Security files load before views (`security/security.xml` → `security/ir.model.access.csv` → data → reports → views). Correct Odoo convention.
+5. **Menu action completeness** — All 16 menu `action=` references resolve to defined `ir.actions.act_window` records. No dangling XML IDs.
 
-6. **Bug fix preserved** — Coder's fix of invalid Python ternary expression in the record rule domain is correctly implemented. The domain syntax is clean and parseable.
+6. **Manifest load order** — `security/ → data/ → reports/ → views/` is correct Odoo convention.
+
+7. **ORM create override** — `@api.model_create_multi` used consistently in all sequence-generating models (`agentx.task`, `agentx.acceptance`).
+
+8. **State machine guards** — All action methods guard entry conditions with `UserError`. No unguarded state transitions.
+
+9. **Acceptance gate on project closure** — `action_done` on `agentx.project` correctly blocks closure until all acceptance records have `state == 'accepted'`.
+
+10. **Cross-file field consistency** — All fields referenced in views (`name`, `state`, `date_end`, `progress_pct`, `completion_rate`, `task_count`, `done_task_count`, `assignee_id`, `story_points`, `priority`) exist in their respective models. No broken view-to-model references found (except `reports/` — see CR-3).
 
 ---
 
 ## File-by-File Summary
 
-| File | Dimensions Checked | Issues Found |
-|------|-------------------|--------------|
-| `security/security.xml` | Security, ORM, Architecture | CR-5 (NB), CR-6 (NB), CR-8 (NB) |
-| `security/ir.model.access.csv` | Security, ACL completeness | CR-1 (B), CR-2 (B), CR-3 (B), CR-7 (NB) |
-| `tests/__init__.py` | Testing | CR-4 (B) |
-| `models/agentx_project.py` | ORM, field names | No issues |
-| `models/agentx_task.py` | ORM, field names | No issues |
-| `models/agentx_team_member.py` | ORM, field names | No issues |
-| `__manifest__.py` | Manifest integrity | No issues |
-| `models/__init__.py` | Module integrity | No issues |
-| All views (9 files) | XML integrity | Not re-reviewed (unchanged from prior tasks) |
-
-**B** = Blocking · **NB** = Non-Blocking
+| File | Dimensions Checked | Blocking | Non-Blocking |
+|------|-------------------|----------|--------------|
+| `models/agentx_sprint.py` | ORM, decorators, compute deps | CR-1, CR-2 | — |
+| `reports/report_acceptance_template.xml` | State value consistency | CR-3 | — |
+| `views/agentx_sprint_views.xml` | XML validity, field existence, kanban spec | — | — |
+| `views/agentx_task_views.xml` | XML validity, kanban spec, search spec | — | CR-7 |
+| `views/menu_views.xml` | Action refs, group refs, spec compliance | — | CR-6 |
+| `models/agentx_task.py` | ORM correctness, task_type | — | CR-5 |
+| `tests/__init__.py` | Test coverage | — | CR-4 |
+| `security/security.xml` | Group hierarchy, record rules | — | — |
+| `security/ir.model.access.csv` | ACL completeness | — | — |
+| `__manifest__.py` | Dependencies, load order | — | — |
+| `models/__init__.py` | Import completeness | — | — |
+| All other models/views | ORM, field existence, XML validity | — | — |
 
 ---
 
@@ -157,25 +175,25 @@ Review focused on `security/security.xml`, `security/ir.model.access.csv`, recor
 
 | Reference | Location |
 |-----------|----------|
-| Spec: CRUD permission matrix | ODO-24 task description |
-| Spec: Group names | ODO-24 task description — "Security groups to create" |
-| Spec: Record rule definitions | ODO-24 task description — "Record rules" section |
-| Odoo ACL convention | `base/security/ir.model.access.csv` pattern |
-| Odoo record rule domains | `base/models/ir_rule.py` domain_force semantics |
+| Sprint kanban spec | `01_technical_spec.md` Section 4 — Sprint Kanban row |
+| Task search spec | `01_technical_spec.md` Section 4 — Search View (Tasks) row |
+| Menu structure spec | `01_technical_spec.md` Section 4 — Menu Structure diagram |
+| Odoo non-stored field search | Odoo ORM — `fields.Boolean(compute=..., store=True)` requirement |
+| Acceptance state values | `models/agentx_acceptance.py` lines 64–76 |
+| Report template stale values | `reports/report_acceptance_template.xml` lines 22–24 |
 
 ---
 
 ## Revision Loop Status
 
-| CR | Severity | Status |
-|----|----------|--------|
-| CR-1 | Blocking | Open — awaiting Coder fix |
-| CR-2 | Blocking | Open — awaiting Coder fix |
-| CR-3 | Blocking | Open — awaiting Coder fix |
-| CR-4 | Blocking | Open — awaiting Coder fix |
-| CR-5 | Non-Blocking | Open — awaiting PM decision |
-| CR-6 | Non-Blocking | Open — awaiting PM decision |
-| CR-7 | Non-Blocking | Open — awaiting PM decision |
-| CR-8 | Non-Blocking | Open — awaiting PM decision |
+| CR | Severity | Assigned To | Status |
+|----|----------|-------------|--------|
+| CR-1 | Blocking | Coder | Open — add `store=True` to `is_overdue` |
+| CR-2 | Blocking | Coder | Open — add `@api.depends('state', 'date_end')` |
+| CR-3 | Blocking | Coder | Open — fix stale state values in report template |
+| CR-4 | Non-Blocking | Coder | Open — tracked for follow-up |
+| CR-5 | Non-Blocking | PM decision | Open — spec alignment clarification |
+| CR-6 | Non-Blocking | Coder | Open — rename menu or document deviation |
+| CR-7 | Non-Blocking | Coder | Open — force kanban view for Task Board |
 
-**Next action:** Coder resolves CR-1 through CR-4 and pushes fix commits to `feature/odo-14.10`. Reviewer re-reviews changed files on next heartbeat trigger.
+**Next action:** Coder resolves CR-1, CR-2, CR-3 and pushes fix commits to `feature/odo-14.9`. Reviewer re-reviews changed files on next heartbeat trigger.
