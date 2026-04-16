@@ -29,7 +29,8 @@ class AgentxProject(models.Model):
     state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
-            ('in_progress', 'In Progress'),
+            ('active', 'Active'),
+            ('on_hold', 'On Hold'),
             ('done', 'Done'),
             ('cancelled', 'Cancelled'),
         ],
@@ -60,6 +61,20 @@ class AgentxProject(models.Model):
         tracking=True,
     )
 
+    # ── Hours ─────────────────────────────────────────────────────────────────
+    estimated_hours = fields.Float(
+        string='Estimated Hours',
+        digits=(8, 2),
+        tracking=True,
+    )
+    actual_hours = fields.Float(
+        compute='_compute_actual_hours',
+        string='Actual Hours',
+        store=True,
+        digits=(8, 2),
+        help='Sum of all timesheet hours logged against tasks in this project.',
+    )
+
     # ── Relationships ─────────────────────────────────────────────────────────
     manager_id = fields.Many2one(
         comodel_name='hr.employee',
@@ -68,15 +83,33 @@ class AgentxProject(models.Model):
         tracking=True,
         index=True,
     )
+    team_lead_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Team Lead',
+        tracking=True,
+        index=True,
+        help='Technical team lead responsible for delivery.',
+    )
     customer_id = fields.Many2one(
         comodel_name='res.partner',
         string='Customer',
         tracking=True,
     )
-    team_ids = fields.One2many(
+    allocation_ids = fields.One2many(
         comodel_name='agentx.team.member',
         inverse_name='project_id',
+        string='Team Allocations',
+    )
+    resource_allocation_ids = fields.One2many(
+        comodel_name='agentx.resource.allocation',
+        inverse_name='project_id',
+        string='Resource Allocations',
+    )
+    member_ids = fields.Many2many(
+        comodel_name='hr.employee',
+        compute='_compute_member_ids',
         string='Team Members',
+        help='All employees allocated to this project.',
     )
     sprint_ids = fields.One2many(
         comodel_name='agentx.sprint',
@@ -87,6 +120,11 @@ class AgentxProject(models.Model):
         comodel_name='agentx.task',
         inverse_name='project_id',
         string='Tasks',
+    )
+    request_ids = fields.One2many(
+        comodel_name='agentx.customer.request',
+        inverse_name='project_id',
+        string='Customer Requests',
     )
     bug_ids = fields.One2many(
         comodel_name='agentx.bug',
@@ -121,6 +159,10 @@ class AgentxProject(models.Model):
         compute='_compute_bug_count',
         string='Open Bugs',
     )
+    request_count = fields.Integer(
+        compute='_compute_request_count',
+        string='Requests',
+    )
     completion_rate = fields.Float(
         compute='_compute_completion_rate',
         string='Completion (%)',
@@ -133,6 +175,18 @@ class AgentxProject(models.Model):
     ]
 
     # ── Compute methods ───────────────────────────────────────────────────────
+    @api.depends('allocation_ids.employee_id')
+    def _compute_member_ids(self):
+        for project in self:
+            project.member_ids = project.allocation_ids.mapped('employee_id')
+
+    @api.depends('task_ids.timesheet_ids.unit_amount')
+    def _compute_actual_hours(self):
+        for project in self:
+            project.actual_hours = sum(
+                project.task_ids.mapped('actual_hours')
+            )
+
     @api.depends('sprint_ids')
     def _compute_sprint_count(self):
         for project in self:
@@ -153,12 +207,19 @@ class AgentxProject(models.Model):
                 )
             )
 
+    @api.depends('request_ids')
+    def _compute_request_count(self):
+        for project in self:
+            project.request_count = len(project.request_ids)
+
     @api.depends('task_ids', 'task_ids.state')
     def _compute_completion_rate(self):
         for project in self:
             total = len(project.task_ids)
             if total:
-                done = len(project.task_ids.filtered(lambda t: t.state == 'done'))
+                done = len(project.task_ids.filtered(
+                    lambda t: t.state == 'done'
+                ))
                 project.completion_rate = (done / total) * 100.0
             else:
                 project.completion_rate = 0.0
@@ -172,32 +233,51 @@ class AgentxProject(models.Model):
 
     # ── State machine actions ─────────────────────────────────────────────────
     def action_start(self):
-        """Transition Draft → In Progress."""
+        """Transition Draft → Active."""
         for project in self:
             if project.state != 'draft':
                 raise UserError(_("Only draft projects can be started."))
-            project.state = 'in_progress'
-            project.message_post(body=_("Project started."))
+            project.state = 'active'
+            project.message_post(body=_("Project activated."))
+
+    def action_hold(self):
+        """Transition Active → On Hold."""
+        for project in self:
+            if project.state != 'active':
+                raise UserError(_("Only active projects can be put on hold."))
+            project.state = 'on_hold'
+            project.message_post(body=_("Project put on hold."))
+
+    def action_reactivate(self):
+        """Transition On Hold → Active."""
+        for project in self:
+            if project.state != 'on_hold':
+                raise UserError(_("Only on-hold projects can be reactivated."))
+            project.state = 'active'
+            project.message_post(body=_("Project reactivated."))
 
     def action_done(self):
-        """Transition In Progress → Done."""
+        """Transition Active → Done."""
         for project in self:
-            if project.state != 'in_progress':
-                raise UserError(_("Only in-progress projects can be closed."))
-            open_bugs = project.bug_ids.filtered(lambda b: b.state not in ('closed', 'cancelled'))
+            if project.state != 'active':
+                raise UserError(_("Only active projects can be closed."))
+            open_bugs = project.bug_ids.filtered(
+                lambda b: b.state not in ('closed', 'cancelled')
+            )
             if open_bugs:
                 raise UserError(
-                    _("Cannot close project with %d open bug(s). Please resolve or cancel them first.")
+                    _("Cannot close project with %d open bug(s). "
+                      "Please resolve or cancel them first.")
                     % len(open_bugs)
                 )
             project.state = 'done'
             project.message_post(body=_("Project closed successfully."))
 
     def action_cancel(self):
-        """Transition In Progress → Cancelled."""
+        """Transition Draft/Active/On Hold → Cancelled."""
         for project in self:
-            if project.state not in ('draft', 'in_progress'):
-                raise UserError(_("Only draft or in-progress projects can be cancelled."))
+            if project.state not in ('draft', 'active', 'on_hold'):
+                raise UserError(_("Only draft, active, or on-hold projects can be cancelled."))
             project.state = 'cancelled'
             project.message_post(body=_("Project cancelled."))
 
@@ -238,6 +318,17 @@ class AgentxProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Bugs'),
             'res_model': 'agentx.bug',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    def action_view_requests(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Customer Requests'),
+            'res_model': 'agentx.customer.request',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id},

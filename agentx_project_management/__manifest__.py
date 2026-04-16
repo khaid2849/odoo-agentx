@@ -37,11 +37,13 @@
         'reports/report_acceptance_template.xml',
         # 4. Views last
         'views/agentx_project_views.xml',
+        'views/agentx_customer_request_views.xml',
         'views/agentx_sprint_views.xml',
         'views/agentx_task_views.xml',
         'views/agentx_bug_views.xml',
         'views/agentx_milestone_views.xml',
         'views/agentx_acceptance_views.xml',
+        'views/agentx_resource_allocation_views.xml',
         'views/agentx_timesheet_views.xml',
         'views/menu_views.xml',
     ],

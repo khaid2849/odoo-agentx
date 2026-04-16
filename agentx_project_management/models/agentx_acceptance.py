@@ -74,6 +74,31 @@ class AgentxAcceptance(models.Model):
         tracking=True,
     )
 
+    # ── Handover details ──────────────────────────────────────────────────────
+    date = fields.Date(
+        string='Acceptance Date',
+        tracking=True,
+        help='The formal date on which the customer accepted the deliverables.',
+    )
+    customer_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Customer',
+        tracking=True,
+        index=True,
+    )
+    signee_name = fields.Char(
+        string='Signee Name',
+        help='Full name of the person signing off on behalf of the customer.',
+    )
+    sprint_ids = fields.Many2many(
+        comodel_name='agentx.sprint',
+        relation='agentx_acceptance_sprint_rel',
+        column1='acceptance_id',
+        column2='sprint_id',
+        string='Covered Sprints',
+        help='Sprints whose deliverables are covered by this acceptance record.',
+    )
+
     # ── Details ───────────────────────────────────────────────────────────────
     description = fields.Html(string='Description')
     criteria_line_ids = fields.One2many(

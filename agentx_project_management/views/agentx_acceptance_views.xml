@@ -14,6 +14,9 @@
                 <field name="code" optional="show"/>
                 <field name="name"/>
                 <field name="project_id"/>
+                <field name="customer_id" optional="show"/>
+                <field name="signee_name" optional="show"/>
+                <field name="date" optional="show"/>
                 <field name="reviewer_id"/>
                 <field name="date_submitted" optional="show"/>
                 <field name="date_reviewed" optional="show"/>
@@ -70,9 +73,14 @@
                     <group>
                         <group>
                             <field name="project_id"/>
-                            <field name="reviewer_id"/>
+                            <field name="customer_id"/>
+                            <field name="signee_name"/>
+                            <field name="date"/>
+                            <field name="sprint_ids" widget="many2many_tags"
+                                   domain="[('project_id', '=', project_id)]"/>
                         </group>
                         <group>
+                            <field name="reviewer_id"/>
                             <field name="date_submitted" readonly="1"/>
                             <field name="date_reviewed" readonly="1"/>
                         </group>
