@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- Root Menu                                                          -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_root"
+              name="AgentX PM"
+              sequence="90"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Projects                                                           -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_projects"
+              name="Projects"
+              parent="menu_agentx_root"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_projects"
+              name="All Projects"
+              parent="menu_agentx_projects"
+              action="action_agentx_project"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_my_projects"
+              name="My Projects"
+              parent="menu_agentx_projects"
+              action="action_agentx_project_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Tasks                                                              -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_tasks"
+              name="Tasks"
+              parent="menu_agentx_root"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_tasks"
+              name="All Tasks"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_my_tasks"
+              name="My Tasks"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_task_board"
+              name="Task Board"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task"
+              sequence="25"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_backlog"
+              name="Backlog"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task_backlog"
+              sequence="30"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Sprints                                                            -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_sprints"
+              name="Sprints"
+              parent="menu_agentx_root"
+              sequence="30"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_active_sprints"
+              name="Active Sprints"
+              parent="menu_agentx_sprints"
+              action="action_agentx_sprint_active"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_sprints"
+              name="All Sprints"
+              parent="menu_agentx_sprints"
+              action="action_agentx_sprint"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Customer Requests                                                  -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_requests"
+              name="Requests"
+              parent="menu_agentx_root"
+              sequence="35"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_requests"
+              name="All Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_my_requests"
+              name="My Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Bugs                                                               -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_bugs"
+              name="Bugs"
+              parent="menu_agentx_root"
+              sequence="40"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_bugs"
+              name="All Bugs"
+              parent="menu_agentx_bugs"
+              action="action_agentx_bug"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_my_bugs"
+              name="My Bugs"
+              parent="menu_agentx_bugs"
+              action="action_agentx_bug_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Acceptance                                                        -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_acceptance"
+              name="Acceptance"
+              parent="menu_agentx_root"
+              sequence="45"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_handover_records"
+              name="Handover Records"
+              parent="menu_agentx_acceptance"
+              action="action_agentx_acceptance"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Reports                                                            -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_reports"
+              name="Reports"
+              parent="menu_agentx_root"
+              sequence="50"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_report_acceptance"
+              name="Acceptance Reports"
+              parent="menu_agentx_reports"
+              action="action_agentx_acceptance"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <!-- ================================================================== -->
+    <!-- Configuration                                                      -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_config"
+              name="Configuration"
+              parent="menu_agentx_root"
+              sequence="99"
+              groups="agentx_project_management.group_agentx_admin"/>
+
+    <menuitem id="menu_agentx_resource_allocations"
+              name="Resource Allocations"
+              parent="menu_agentx_config"
+              action="action_agentx_resource_allocation"
+              sequence="5"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_tags"
+              name="Tags"
+              parent="menu_agentx_config"
+              action="action_agentx_tag"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_admin"/>
+
+    <menuitem id="menu_agentx_milestones"
+              name="Milestones"
+              parent="menu_agentx_config"
+              action="action_agentx_milestone"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_admin"/>
+
+</odoo>
