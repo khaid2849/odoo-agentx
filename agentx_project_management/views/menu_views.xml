@@ -55,6 +55,13 @@
               sequence="20"
               groups="agentx_project_management.group_agentx_user"/>
 
+    <menuitem id="menu_agentx_task_board"
+              name="Task Board"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task"
+              sequence="25"
+              groups="agentx_project_management.group_agentx_user"/>
+
     <menuitem id="menu_agentx_backlog"
               name="Backlog"
               parent="menu_agentx_tasks"
@@ -129,6 +136,22 @@
               parent="menu_agentx_bugs"
               action="action_agentx_bug_my"
               sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Acceptance                                                        -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_acceptance"
+              name="Acceptance"
+              parent="menu_agentx_root"
+              sequence="45"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_handover_records"
+              name="Handover Records"
+              parent="menu_agentx_acceptance"
+              action="action_agentx_acceptance"
+              sequence="10"
               groups="agentx_project_management.group_agentx_user"/>
 
     <!-- ================================================================== -->
