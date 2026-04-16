@@ -174,6 +174,16 @@ class AgentxTask(models.Model):
                     % (task.sprint_id.name, task.project_id.name)
                 )
 
+    @api.constrains('state', 'sprint_id')
+    def _check_todo_requires_sprint(self):
+        """CHK-05: Tasks in 'To Do' state must have a sprint assigned."""
+        for task in self:
+            if task.state == 'todo' and not task.sprint_id:
+                raise ValidationError(
+                    _("Task '%s' must be assigned to a sprint before moving to 'To Do'.")
+                    % task.name
+                )
+
     # ── State machine actions ─────────────────────────────────────────────────
     def action_plan(self):
         """Transition Backlog → To Do (assign to sprint)."""

@@ -69,8 +69,25 @@ class AgentxResourceAllocation(models.Model):
 
     @api.constrains('allocation_pct')
     def _check_allocation_pct(self):
+        """CHK-04: Allocation percentage must be between 0.01 and 100.0."""
         for alloc in self:
             if not (0.0 < alloc.allocation_pct <= 100.0):
                 raise ValidationError(
-                    _("Allocation percentage must be between 0 and 100.")
+                    _("Allocation percentage must be between 0.01 and 100.0.")
+                )
+
+    @api.constrains('employee_id', 'project_id')
+    def _check_no_duplicate_allocation(self):
+        """CHK-06: No duplicate (employee_id, project_id) allocations."""
+        for alloc in self:
+            duplicate = self.search([
+                ('employee_id', '=', alloc.employee_id.id),
+                ('project_id', '=', alloc.project_id.id),
+                ('id', '!=', alloc.id),
+            ], limit=1)
+            if duplicate:
+                raise ValidationError(
+                    _("Employee '%s' is already allocated to project '%s'. "
+                      "Please update the existing allocation record.")
+                    % (alloc.employee_id.name, alloc.project_id.name)
                 )

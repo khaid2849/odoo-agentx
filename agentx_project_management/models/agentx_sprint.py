@@ -121,6 +121,24 @@ class AgentxSprint(models.Model):
             if sprint.date_end and sprint.date_start and sprint.date_end < sprint.date_start:
                 raise ValidationError(_("Sprint end date cannot be before start date."))
 
+    @api.constrains('date_start', 'date_end', 'project_id')
+    def _check_dates_within_project(self):
+        """CHK-03: Sprint dates must fall within the project date range."""
+        for sprint in self:
+            proj = sprint.project_id
+            if not proj:
+                continue
+            if proj.date_start and sprint.date_start and sprint.date_start < proj.date_start:
+                raise ValidationError(
+                    _("Sprint '%s' start date cannot be before project start date (%s).")
+                    % (sprint.name, proj.date_start)
+                )
+            if proj.date_end and sprint.date_end and sprint.date_end > proj.date_end:
+                raise ValidationError(
+                    _("Sprint '%s' end date cannot be after project end date (%s).")
+                    % (sprint.name, proj.date_end)
+                )
+
     @api.constrains('project_id', 'state')
     def _check_one_active_sprint(self):
         for sprint in self:
