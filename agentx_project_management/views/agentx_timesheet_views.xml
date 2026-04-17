@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- Inherit hr_timesheet line form to add AgentX task field            -->
+    <!-- ================================================================== -->
+    <record id="view_hr_timesheet_line_form_agentx" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.agentx</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <!-- Insert AgentX task field after the existing task field (or name field) -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="agentx_task_id"
+                       domain="[]"
+                       options="{'no_create': True}"
+                       placeholder="Link to AgentX Task…"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
