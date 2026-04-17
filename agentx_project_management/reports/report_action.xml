@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- Acceptance Criteria PDF Report Action                              -->
+    <!-- ================================================================== -->
+    <record id="action_report_agentx_acceptance" model="ir.actions.report">
+        <field name="name">Acceptance Criteria Report</field>
+        <field name="model">agentx.acceptance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">agentx_project_management.report_acceptance_document</field>
+        <field name="report_file">agentx_project_management.report_acceptance_document</field>
+        <field name="binding_model_id" ref="agentx_project_management.model_agentx_acceptance"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- Project Summary PDF Report Action                                  -->
+    <!-- ================================================================== -->
+    <record id="action_report_agentx_project_summary" model="ir.actions.report">
+        <field name="name">Project Summary Report</field>
+        <field name="model">agentx.project</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">agentx_project_management.report_project_summary_document</field>
+        <field name="report_file">agentx_project_management.report_project_summary_document</field>
+        <field name="binding_model_id" ref="agentx_project_management.model_agentx_project"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+</odoo>

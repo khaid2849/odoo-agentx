@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- agentx.project — List View                                         -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_project_list" model="ir.ui.view">
+        <field name="name">agentx.project.list</field>
+        <field name="model">agentx.project</field>
+        <field name="arch" type="xml">
+            <list string="Projects" decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'done'"
+                  decoration-info="state == 'in_progress'">
+                <field name="code" optional="show"/>
+                <field name="name"/>
+                <field name="manager_id"/>
+                <field name="customer_id" optional="show"/>
+                <field name="date_start"/>
+                <field name="date_end" optional="show"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="completion_rate" widget="progressbar"/>
+                <field name="sprint_count" string="Sprints" optional="show"/>
+                <field name="task_count" string="Tasks" optional="show"/>
+                <field name="open_bug_count" string="Open Bugs" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.project — Form View                                         -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_project_form" model="ir.ui.view">
+        <field name="name">agentx.project.form</field>
+        <field name="model">agentx.project</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <header>
+                    <button name="action_start" string="Start" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_done" string="Close Project" type="object"
+                            class="btn-primary"
+                            invisible="state != 'in_progress'"
+                            confirm="Are you sure you want to close this project?"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state not in ('draft', 'in_progress')"
+                            confirm="Are you sure you want to cancel this project?"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,done"/>
+                </header>
+                <sheet>
+                    <!-- Stat buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sprints" type="object"
+                                class="oe_stat_button" icon="fa-flag">
+                            <field name="sprint_count" widget="statinfo" string="Sprints"/>
+                        </button>
+                        <button name="action_view_tasks" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" string="Tasks"/>
+                        </button>
+                        <button name="action_view_bugs" type="object"
+                                class="oe_stat_button" icon="fa-bug">
+                            <field name="open_bug_count" widget="statinfo" string="Open Bugs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Project Name…"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="manager_id"/>
+                            <field name="customer_id"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="completion_rate" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Team" name="team">
+                            <field name="team_ids">
+                                <list editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="role"/>
+                                    <field name="allocation_percent"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Sprints" name="sprints">
+                            <field name="sprint_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="task_count"/>
+                                    <field name="done_task_count"/>
+                                    <field name="completion_rate" widget="progressbar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Milestones" name="milestones">
+                            <field name="milestone_ids">
+                                <list editable="bottom"
+                                      decoration-danger="is_overdue">
+                                    <field name="name"/>
+                                    <field name="date_deadline"/>
+                                    <field name="responsible_id"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'achieved'"
+                                           decoration-danger="state == 'missed'"/>
+                                    <field name="is_overdue" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Acceptance Criteria" name="acceptance">
+                            <field name="acceptance_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'approved'"
+                                           decoration-danger="state == 'rejected'"/>
+                                    <field name="criteria_count"/>
+                                    <field name="passed_count"/>
+                                    <field name="failed_count"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.project — Kanban View                                       -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_project_kanban" model="ir.ui.view">
+        <field name="name">agentx.project.kanban</field>
+        <field name="model">agentx.project</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="manager_id"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="completion_rate"/>
+                <field name="task_count"/>
+                <field name="open_bug_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="row mb-1">
+                            <div class="col-10">
+                                <field class="fw-bold" name="name"/>
+                                <div class="text-muted small">
+                                    <field name="code"/>
+                                </div>
+                            </div>
+                            <div class="col-2 text-end">
+                                <field name="priority" widget="priority" readonly="1"/>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                            <field name="manager_id" widget="many2one_avatar_employee"/>
+                        </div>
+                        <div class="mb-1">
+                            <span class="badge bg-primary me-1">
+                                <i class="fa fa-tasks"/> <field name="task_count"/> tasks
+                            </span>
+                            <span class="badge bg-danger">
+                                <i class="fa fa-bug"/> <field name="open_bug_count"/> bugs
+                            </span>
+                        </div>
+                        <field name="completion_rate" widget="progressbar"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.project — Search View                                       -->
+    <!-- ================================================================== -->
+    <record id="view_agentx_project_search" model="ir.ui.view">
+        <field name="name">agentx.project.search</field>
+        <field name="model">agentx.project</field>
+        <field name="arch" type="xml">
+            <search string="Search Projects">
+                <field name="name" string="Project"/>
+                <field name="code"/>
+                <field name="manager_id"/>
+                <field name="customer_id"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Done" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled"
+                        domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="My Projects" name="my_projects"
+                        domain="[('manager_id.user_id', '=', uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Manager" name="group_manager"
+                            context="{'group_by': 'manager_id'}"/>
+                    <filter string="Customer" name="group_customer"
+                            context="{'group_by': 'customer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================== -->
+    <!-- agentx.project — Action                                            -->
+    <!-- ================================================================== -->
+    <record id="action_agentx_project" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">agentx.project</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_agentx_project_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project!
+            </p>
+            <p>
+                Track software project lifecycles from requirements to handover.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_agentx_project_my" model="ir.actions.act_window">
+        <field name="name">My Projects</field>
+        <field name="res_model">agentx.project</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('manager_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_agentx_project_search"/>
+    </record>
+
+</odoo>

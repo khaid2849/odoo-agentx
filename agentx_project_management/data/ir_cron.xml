@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Cron 1: Flag overdue milestones as missed (runs daily) -->
+        <record id="cron_flag_overdue_milestones" model="ir.cron">
+            <field name="name">AgentX: Flag Overdue Milestones</field>
+            <field name="model_id" ref="agentx_project_management.model_agentx_milestone"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_flag_overdue_milestones()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Cron 2: Flag overdue sprints (runs daily) -->
+        <record id="cron_flag_overdue_sprints" model="ir.cron">
+            <field name="name">AgentX: Notify Overdue Sprints</field>
+            <field name="model_id" ref="agentx_project_management.model_agentx_sprint"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_overdue_sprints()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+    </data>
+</odoo>
