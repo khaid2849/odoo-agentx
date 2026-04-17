@@ -33,13 +33,13 @@ class AgentxSprint(models.Model):
     )
     state = fields.Selection(
         selection=[
-            ('draft', 'Planning'),
+            ('planning', 'Planning'),
             ('active', 'Active'),
             ('completed', 'Completed'),
             ('cancelled', 'Cancelled'),
         ],
         string='Status',
-        default='draft',
+        default='planning',
         required=True,
         tracking=True,
     )
@@ -96,6 +96,19 @@ class AgentxSprint(models.Model):
         string='Total Story Points',
         store=True,
     )
+    completed_story_points = fields.Integer(
+        compute='_compute_task_stats',
+        string='Completed Story Points',
+        store=True,
+        help='Sum of story points for tasks in Done state.',
+    )
+    progress_pct = fields.Float(
+        compute='_compute_task_stats',
+        string='Progress (%)',
+        store=True,
+        digits=(5, 2),
+        help='Percentage of story points completed vs total.',
+    )
     is_overdue = fields.Boolean(
         compute='_compute_is_overdue',
         string='Overdue',
@@ -107,6 +120,24 @@ class AgentxSprint(models.Model):
         for sprint in self:
             if sprint.date_end and sprint.date_start and sprint.date_end < sprint.date_start:
                 raise ValidationError(_("Sprint end date cannot be before start date."))
+
+    @api.constrains('date_start', 'date_end', 'project_id')
+    def _check_dates_within_project(self):
+        """CHK-03: Sprint dates must fall within the project date range."""
+        for sprint in self:
+            proj = sprint.project_id
+            if not proj:
+                continue
+            if proj.date_start and sprint.date_start and sprint.date_start < proj.date_start:
+                raise ValidationError(
+                    _("Sprint '%s' start date cannot be before project start date (%s).")
+                    % (sprint.name, proj.date_start)
+                )
+            if proj.date_end and sprint.date_end and sprint.date_end > proj.date_end:
+                raise ValidationError(
+                    _("Sprint '%s' end date cannot be after project end date (%s).")
+                    % (sprint.name, proj.date_end)
+                )
 
     @api.constrains('project_id', 'state')
     def _check_one_active_sprint(self):
@@ -129,12 +160,19 @@ class AgentxSprint(models.Model):
     def _compute_task_stats(self):
         for sprint in self:
             tasks = sprint.task_ids
+            done_tasks = tasks.filtered(lambda t: t.state == 'done')
             total = len(tasks)
-            done = len(tasks.filtered(lambda t: t.state == 'done'))
+            done = len(done_tasks)
             sprint.task_count = total
             sprint.done_task_count = done
             sprint.completion_rate = (done / total * 100.0) if total else 0.0
             sprint.total_story_points = sum(tasks.mapped('story_points'))
+            sprint.completed_story_points = sum(done_tasks.mapped('story_points'))
+            total_pts = sprint.total_story_points
+            sprint.progress_pct = (
+                (sprint.completed_story_points / total_pts * 100.0)
+                if total_pts else 0.0
+            )
 
     def _compute_is_overdue(self):
         today = fields.Date.today()
@@ -149,10 +187,12 @@ class AgentxSprint(models.Model):
     def action_start(self):
         """Transition Planning → Active."""
         for sprint in self:
-            if sprint.state != 'draft':
+            if sprint.state != 'planning':
                 raise UserError(_("Only planned sprints can be started."))
-            if sprint.project_id.state != 'in_progress':
-                raise UserError(_("Cannot start a sprint on a project that is not in progress."))
+            if sprint.project_id.state != 'active':
+                raise UserError(
+                    _("Cannot start a sprint on a project that is not active.")
+                )
             sprint.state = 'active'
             sprint.message_post(body=_("Sprint started: %s") % sprint.name)
             _logger.info("Sprint %s (id=%s) started.", sprint.name, sprint.id)
@@ -179,17 +219,17 @@ class AgentxSprint(models.Model):
     def action_cancel(self):
         """Transition Planning/Active → Cancelled."""
         for sprint in self:
-            if sprint.state not in ('draft', 'active'):
+            if sprint.state not in ('planning', 'active'):
                 raise UserError(_("Only planned or active sprints can be cancelled."))
             sprint.state = 'cancelled'
             sprint.message_post(body=_("Sprint cancelled."))
 
-    def action_reset_to_draft(self):
+    def action_reset_to_planning(self):
         """Transition Cancelled → Planning."""
         for sprint in self:
             if sprint.state != 'cancelled':
                 raise UserError(_("Only cancelled sprints can be reset to planning."))
-            sprint.state = 'draft'
+            sprint.state = 'planning'
             sprint.message_post(body=_("Sprint reset to planning."))
 
     # ── Scheduled action helper ───────────────────────────────────────────────

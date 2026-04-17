@@ -56,6 +56,13 @@
               sequence="20"
               groups="agentx_project_management.group_agentx_user"/>
 
+    <menuitem id="menu_agentx_task_board"
+              name="Task Board"
+              parent="menu_agentx_tasks"
+              action="action_agentx_task"
+              sequence="25"
+              groups="agentx_project_management.group_agentx_user"/>
+
     <menuitem id="menu_agentx_backlog"
               name="Backlog"
               parent="menu_agentx_tasks"
@@ -87,6 +94,29 @@
               groups="agentx_project_management.group_agentx_user"/>
 
     <!-- ================================================================== -->
+    <!-- Customer Requests                                                  -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_requests"
+              name="Requests"
+              parent="menu_agentx_root"
+              sequence="35"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_requests"
+              name="All Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_my_requests"
+              name="My Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
     <!-- Bugs                                                               -->
     <!-- ================================================================== -->
     <menuitem id="menu_agentx_bugs"
@@ -107,6 +137,22 @@
               parent="menu_agentx_bugs"
               action="action_agentx_bug_my"
               sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
+    <!-- Acceptance                                                        -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_acceptance"
+              name="Acceptance"
+              parent="menu_agentx_root"
+              sequence="45"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_handover_records"
+              name="Handover Records"
+              parent="menu_agentx_acceptance"
+              action="action_agentx_acceptance"
+              sequence="10"
               groups="agentx_project_management.group_agentx_user"/>
 
     <!-- ================================================================== -->
@@ -133,6 +179,13 @@
               parent="menu_agentx_root"
               sequence="99"
               groups="agentx_project_management.group_agentx_admin"/>
+
+    <menuitem id="menu_agentx_resource_allocations"
+              name="Resource Allocations"
+              parent="menu_agentx_config"
+              action="action_agentx_resource_allocation"
+              sequence="5"
+              groups="agentx_project_management.group_agentx_manager"/>
 
     <menuitem id="menu_agentx_tags"
               name="Tags"
