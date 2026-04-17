@@ -47,11 +47,11 @@
                     <button name="action_accept" string="Accept" type="object"
                             class="btn-primary"
                             invisible="state != 'submitted'"
-                            groups="agentx_project_management.group_agentx_manager"
+                            groups="agentx_project_management.group_agentx_project_manager"
                             confirm="Accept these criteria? This confirms project handover."/>
                     <button name="action_reject" string="Reject" type="object"
                             invisible="state != 'submitted'"
-                            groups="agentx_project_management.group_agentx_manager"
+                            groups="agentx_project_management.group_agentx_project_manager"
                             confirm="Reject these acceptance criteria?"/>
                     <button name="action_resubmit" string="Resubmit" type="object"
                             class="btn-primary"

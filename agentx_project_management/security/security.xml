@@ -7,26 +7,26 @@
         <!-- ================================================================ -->
 
         <!-- Group: Viewer — read-only access to all project data -->
-        <record id="group_agentx_viewer" model="res.groups">
-            <field name="name">AgentX Viewer</field>
+        <record id="group_agentx_project_viewer" model="res.groups">
+            <field name="name">AgentX Project Viewer</field>
             <field name="category_id" ref="base.module_category_project"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">Read-only access to all AgentX project data.</field>
         </record>
 
-        <!-- Group: User (Project Member) — view projects, CRUD own tasks, log timesheets -->
-        <record id="group_agentx_user" model="res.groups">
-            <field name="name">AgentX User</field>
+        <!-- Group: Project Member — view projects, CRUD own tasks, log timesheets -->
+        <record id="group_agentx_project_member" model="res.groups">
+            <field name="name">AgentX Project Member</field>
             <field name="category_id" ref="base.module_category_project"/>
-            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_viewer'))]"/>
+            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_project_viewer'))]"/>
             <field name="comment">Can view projects and manage own tasks and bugs.</field>
         </record>
 
-        <!-- Group: Manager (Project Manager) — full CRUD on all records -->
-        <record id="group_agentx_manager" model="res.groups">
-            <field name="name">AgentX Manager</field>
+        <!-- Group: Project Manager — full CRUD on all records -->
+        <record id="group_agentx_project_manager" model="res.groups">
+            <field name="name">AgentX Project Manager</field>
             <field name="category_id" ref="base.module_category_project"/>
-            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_project_member'))]"/>
             <field name="comment">Can create/manage projects, sprints, and all tasks.</field>
         </record>
 
@@ -34,7 +34,7 @@
         <record id="group_agentx_admin" model="res.groups">
             <field name="name">AgentX Administrator</field>
             <field name="category_id" ref="base.module_category_project"/>
-            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_manager'))]"/>
+            <field name="implied_ids" eval="[(4, ref('agentx_project_management.group_agentx_project_manager'))]"/>
             <field name="comment">Full administrative access to all AgentX records.</field>
         </record>
 
@@ -54,7 +54,7 @@
                     ('allocation_ids.employee_id.user_id', '=', user.id)
                 ]
             </field>
-            <field name="groups" eval="[(4, ref('agentx_project_management.group_agentx_user'))]"/>
+            <field name="groups" eval="[(4, ref('agentx_project_management.group_agentx_project_member'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
@@ -72,7 +72,7 @@
                     ('project_id.manager_id.user_id', '=', user.id)
                 ]
             </field>
-            <field name="groups" eval="[(4, ref('agentx_project_management.group_agentx_user'))]"/>
+            <field name="groups" eval="[(4, ref('agentx_project_management.group_agentx_project_member'))]"/>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="False"/>
