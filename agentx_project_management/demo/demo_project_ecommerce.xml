@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         PROJECT 1: E-COMMERCE PLATFORM
+         Customer: Nguyen Trading Company
+         Status: In Progress | Priority: High
+         Timeline: Jan 15, 2026 → Jun 30, 2026
+    ================================================================ -->
+
+    <record id="project_ecommerce" model="agentx.project">
+        <field name="name">E-Commerce Platform</field>
+        <field name="code">ECOM-2026</field>
+        <field name="description"><![CDATA[
+            <p>Full-featured B2C e-commerce platform for Nguyen Trading Company, replacing their legacy catalog system.
+            The platform will serve <strong>50,000+ registered customers</strong> with a modern shopping experience,
+            integrated payment gateways (VNPay, MoMo, bank transfer), and a real-time inventory management system.</p>
+            <p><strong>Key deliverables:</strong></p>
+            <ul>
+                <li>Responsive web storefront (React.js + Next.js)</li>
+                <li>RESTful API backend (Python/FastAPI)</li>
+                <li>Admin dashboard for product and order management</li>
+                <li>VNPay &amp; MoMo payment gateway integration</li>
+                <li>Elasticsearch-powered product search</li>
+                <li>Automated order fulfillment notifications</li>
+            </ul>
+        ]]></field>
+        <field name="state">in_progress</field>
+        <field name="priority">1</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="date_end">2026-06-30</field>
+        <field name="manager_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="customer_id" ref="agentx_project_management.partner_nguyen_trading_co"/>
+    </record>
+
+    <!-- == Team Members == -->
+
+    <record id="team_ecom_pm" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="role">pm</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="allocation_percent">60.0</field>
+        <field name="notes">Project lead. Handles client communication, sprint planning, and stakeholder reporting.</field>
+    </record>
+
+    <record id="team_ecom_lead_dev" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="allocation_percent">100.0</field>
+        <field name="notes">Technical lead. Owns system architecture, code reviews, and backend API development.</field>
+    </record>
+
+    <record id="team_ecom_frontend" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-01-20</field>
+        <field name="allocation_percent">100.0</field>
+        <field name="notes">Frontend development using React.js and Next.js. Responsible for all user-facing screens.</field>
+    </record>
+
+    <record id="team_ecom_backend" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="allocation_percent">100.0</field>
+        <field name="notes">Backend developer. Owns product catalog, order management, and payment integration APIs.</field>
+    </record>
+
+    <record id="team_ecom_qa" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="role">qa</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="allocation_percent">80.0</field>
+        <field name="notes">QA lead. Writes test cases, performs regression testing, and manages UAT sessions with the client.</field>
+    </record>
+
+    <record id="team_ecom_designer" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_dang_thi_lan"/>
+        <field name="role">designer</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="date_end">2026-03-31</field>
+        <field name="allocation_percent">50.0</field>
+        <field name="notes">UI/UX designer. Responsible for wireframes, design system, and Figma prototypes.</field>
+    </record>
+
+    <record id="team_ecom_devops" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="employee_id" ref="agentx_project_management.employee_bui_duc_nam"/>
+        <field name="role">devops</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="allocation_percent">40.0</field>
+        <field name="notes">DevOps engineer. Manages CI/CD pipelines, Docker/Kubernetes deployment, and server monitoring.</field>
+    </record>
+
+    <!-- == Sprints == -->
+
+    <record id="sprint_ecom_1" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Sprint 1 — Foundation &amp; Infrastructure</field>
+        <field name="sequence">1</field>
+        <field name="state">completed</field>
+        <field name="goal">Establish the development environment, CI/CD pipeline, system architecture, and UI/UX design foundations so the team can build product features from Sprint 2 onward.</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="date_end">2026-02-11</field>
+        <field name="capacity">30</field>
+        <field name="velocity">29</field>
+    </record>
+
+    <record id="sprint_ecom_2" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Sprint 2 — User Auth &amp; Product Catalog</field>
+        <field name="sequence">2</field>
+        <field name="state">completed</field>
+        <field name="goal">Deliver fully functional user registration/login flows and a complete product catalog CRUD system accessible via API and the admin dashboard.</field>
+        <field name="date_start">2026-02-15</field>
+        <field name="date_end">2026-03-14</field>
+        <field name="capacity">32</field>
+        <field name="velocity">29</field>
+    </record>
+
+    <record id="sprint_ecom_3" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Sprint 3 — Search, Filtering &amp; Categories</field>
+        <field name="sequence">3</field>
+        <field name="state">completed</field>
+        <field name="goal">Implement Elasticsearch-powered product search with Vietnamese language support, advanced filtering, category management, and image CDN upload integration.</field>
+        <field name="date_start">2026-03-17</field>
+        <field name="date_end">2026-04-11</field>
+        <field name="capacity">32</field>
+        <field name="velocity">29</field>
+    </record>
+
+    <record id="sprint_ecom_4" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Sprint 4 — Shopping Cart &amp; Checkout</field>
+        <field name="sequence">4</field>
+        <field name="state">active</field>
+        <field name="goal">Build the complete shopping cart, guest and member checkout flows, and integrate VNPay and MoMo payment gateways. Deliver order creation and confirmation emails.</field>
+        <field name="date_start">2026-04-14</field>
+        <field name="date_end">2026-05-10</field>
+        <field name="capacity">42</field>
+    </record>
+
+    <!-- == Tasks — Sprint 1 (all done) == -->
+
+    <record id="task_ecom_s1_cicd" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_1"/>
+        <field name="name">Setup CI/CD Pipeline with GitHub Actions</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_bui_duc_nam"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-01-22</field>
+        <field name="date_started">2026-01-15 09:00:00</field>
+        <field name="date_done">2026-01-22 17:30:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_infrastructure')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Configure GitHub Actions workflows for automated testing, linting, and deployment to staging and production environments.</p><p><strong>Pipelines required:</strong></p><ul><li>PR validation: lint + unit tests</li><li>Merge to main: deploy to staging</li><li>Release tag: deploy to production</li></ul>]]></field>
+        <field name="acceptance_criteria">All unit tests run automatically on pull requests. Staging auto-deploys on merge to main. Deployment logs are visible in Slack #deployments channel.</field>
+    </record>
+
+    <record id="task_ecom_s1_architecture" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_1"/>
+        <field name="name">Design System Architecture and Database Schema</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-01-25</field>
+        <field name="date_started">2026-01-15 09:00:00</field>
+        <field name="date_done">2026-01-25 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_database')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Define and document the complete system architecture and database schema covering all core entities: users, products, categories, orders, payments, reviews, and inventory.</p>]]></field>
+        <field name="acceptance_criteria">Architecture diagram reviewed and approved by PM. Database ERD covers all entities. ADR (Architecture Decision Record) documented in Confluence.</field>
+    </record>
+
+    <record id="task_ecom_s1_docker" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_1"/>
+        <field name="name">Setup Docker Development Environment</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">3</field>
+        <field name="estimated_hours">8.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_bui_duc_nam"/>
+        <field name="date_deadline">2026-01-20</field>
+        <field name="date_started">2026-01-15 14:00:00</field>
+        <field name="date_done">2026-01-19 15:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_infrastructure'))]"/>
+        <field name="description"><![CDATA[<p>Create Docker Compose configuration for local development environment including: API server, PostgreSQL, Redis cache, and Elasticsearch services.</p>]]></field>
+        <field name="acceptance_criteria">Any developer can run docker-compose up and have a working local environment within 5 minutes. README documents all required environment variables.</field>
+    </record>
+
+    <record id="task_ecom_s1_api_framework" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_1"/>
+        <field name="name">Build Base Backend API Framework (FastAPI)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-02-05</field>
+        <field name="date_started">2026-01-20 09:00:00</field>
+        <field name="date_done">2026-02-04 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Set up the FastAPI project with standard middleware stack including: JWT authentication, request logging, error handling, CORS, rate limiting middleware, and Swagger/OpenAPI documentation auto-generation.</p>]]></field>
+        <field name="acceptance_criteria">API returns proper HTTP status codes. Swagger docs available at /docs. JWT middleware validates tokens correctly. Request/response logging enabled.</field>
+    </record>
+
+    <record id="task_ecom_s1_wireframes" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_1"/>
+        <field name="name">Design UI/UX Wireframes for Core Screens</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">20.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_dang_thi_lan"/>
+        <field name="date_deadline">2026-02-07</field>
+        <field name="date_started">2026-01-18 09:00:00</field>
+        <field name="date_done">2026-02-07 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_uiux')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Create high-fidelity Figma wireframes for: Homepage, Product Listing, Product Detail, Shopping Cart, Checkout (3 steps), Order Confirmation, and User Account pages. Include mobile-responsive layouts.</p>]]></field>
+        <field name="acceptance_criteria">All 8 core screens wireframed in Figma. Client reviewed and approved the designs. Design tokens (colors, typography, spacing) documented in Figma's design system.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 2 (all done) == -->
+
+    <record id="task_ecom_s2_user_auth" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="name">User Registration, Login &amp; OAuth API</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-02-28</field>
+        <field name="date_started">2026-02-15 09:00:00</field>
+        <field name="date_done">2026-02-28 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_authentication')), (4, ref('agentx_project_management.tag_security'))]"/>
+        <field name="description"><![CDATA[<p>Implement user registration (email+password), email verification, login, logout, password reset via email, and Google OAuth 2.0 social login. All endpoints must pass security review.</p>]]></field>
+        <field name="acceptance_criteria">Registration sends verification email. Login returns JWT + refresh token. Password reset delivered within 60s. Google OAuth returns user profile. Account locked after 5 failed attempts.</field>
+    </record>
+
+    <record id="task_ecom_s2_product_api" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="name">Product Catalog CRUD API</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-05</field>
+        <field name="date_started">2026-02-20 09:00:00</field>
+        <field name="date_done">2026-03-05 16:30:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Build complete CRUD API for product management: create, read, update, delete products with fields for name, SKU, price, stock, images, description, and category assignment. Include pagination and search by name.</p>]]></field>
+        <field name="acceptance_criteria">All 5 CRUD endpoints documented in Swagger. Response time under 200ms for single product fetch. Pagination works correctly. Admin role required for create/update/delete.</field>
+    </record>
+
+    <record id="task_ecom_s2_category" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="name">Product Category Management (Nested Tree)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-08</field>
+        <field name="date_started">2026-02-22 09:00:00</field>
+        <field name="date_done">2026-03-07 15:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_database'))]"/>
+        <field name="description"><![CDATA[<p>Implement multi-level product category tree (up to 3 levels deep) with API endpoints to create, rename, reorder, and delete categories. Support moving products between categories.</p>]]></field>
+        <field name="acceptance_criteria">Categories support up to 3 nesting levels. Deleting a parent category is blocked if it has products. Category tree returned as nested JSON.</field>
+    </record>
+
+    <record id="task_ecom_s2_product_listing_ui" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="name">Product Listing &amp; Detail Frontend Pages</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">20.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_dang_thi_lan"/>
+        <field name="date_deadline">2026-03-10</field>
+        <field name="date_started">2026-02-22 09:00:00</field>
+        <field name="date_done">2026-03-10 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_uiux'))]"/>
+        <field name="description"><![CDATA[<p>Build the Product Listing page (grid/list view toggle, 24 products per page, infinite scroll) and Product Detail page (image gallery, variants selector, add-to-cart button, related products section).</p>]]></field>
+        <field name="acceptance_criteria">Listing page renders in under 1.5s. Detail page image gallery swipeable on mobile. Add-to-cart works with quantity selector. Breadcrumb navigation shows correct hierarchy.</field>
+    </record>
+
+    <record id="task_ecom_s2_rate_limiting" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="name">Implement API Rate Limiting and Request Throttling</field>
+        <field name="task_type">improvement</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">3</field>
+        <field name="estimated_hours">8.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-03-12</field>
+        <field name="date_started">2026-03-06 09:00:00</field>
+        <field name="date_done">2026-03-11 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_performance'))]"/>
+        <field name="description"><![CDATA[<p>Add Redis-backed rate limiting to all public API endpoints: 100 req/min for authenticated users, 30 req/min for guests. Return 429 with Retry-After header when limit is exceeded.</p>]]></field>
+        <field name="acceptance_criteria">Rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining) present in all API responses. 429 response includes Retry-After header. Rate limits configurable per environment.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 3 (all done) == -->
+
+    <record id="task_ecom_s3_search" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_3"/>
+        <field name="name">Product Search with Elasticsearch (Vietnamese Support)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-04-05</field>
+        <field name="date_started">2026-03-17 09:00:00</field>
+        <field name="date_done">2026-04-04 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_performance'))]"/>
+        <field name="description"><![CDATA[<p>Integrate Elasticsearch 8.x for full-text product search with Vietnamese language analyzer (icu_tokenizer + icu_folding). Support typo tolerance (fuzziness), autocomplete suggestions, and search result highlighting.</p>]]></field>
+        <field name="acceptance_criteria">Search returns relevant results including diacritic-insensitive Vietnamese queries. Autocomplete appears within 100ms. Top result precision above 80% on test dataset. Elasticsearch index syncs on product create/update/delete.</field>
+    </record>
+
+    <record id="task_ecom_s3_image_upload" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_3"/>
+        <field name="name">Product Image Upload &amp; CDN Integration</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-03-28</field>
+        <field name="date_started">2026-03-17 13:00:00</field>
+        <field name="date_done">2026-03-27 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_infrastructure'))]"/>
+        <field name="description"><![CDATA[<p>Build product image upload service: accept JPEG/PNG/WebP up to 5MB, auto-resize to 3 thumbnail sizes, upload to Cloudflare R2 (CDN), and return CDN URLs. Support up to 8 images per product.</p>]]></field>
+        <field name="acceptance_criteria">Image uploads complete within 3 seconds. CDN URL returned on success. Invalid file types rejected with clear error message. Thumbnails generated at 800x800, 400x400, and 150x150.</field>
+    </record>
+
+    <record id="task_ecom_s3_filtering" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_3"/>
+        <field name="name">Product Filtering, Sorting &amp; Pagination (Frontend)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_dang_thi_lan"/>
+        <field name="date_deadline">2026-04-08</field>
+        <field name="date_started">2026-03-20 09:00:00</field>
+        <field name="date_done">2026-04-08 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_uiux'))]"/>
+        <field name="description"><![CDATA[<p>Build the filter sidebar (category, price range slider, brand, rating stars, in-stock toggle) and sort dropdown (newest, price asc/desc, most popular). URL query params must reflect active filters for shareability.</p>]]></field>
+        <field name="acceptance_criteria">Filters update URL params and page results without full reload. Price range slider has min/max inputs. Multiple categories selectable simultaneously. Filters persist on pagination navigation.</field>
+    </record>
+
+    <record id="task_ecom_s3_unit_tests" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_3"/>
+        <field name="name">Write Unit Tests for Product &amp; Auth APIs</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">3</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="date_deadline">2026-04-10</field>
+        <field name="date_started">2026-03-25 09:00:00</field>
+        <field name="date_done">2026-04-10 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_testing')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Write pytest unit tests covering: user registration validation, login flow, JWT token generation/expiry, product CRUD operations, category tree traversal, and image upload validation. Achieve 80%+ code coverage on tested modules.</p>]]></field>
+        <field name="acceptance_criteria">Test suite passes 100% in CI. Code coverage for auth and product modules reaches at least 80%. All edge cases (empty inputs, duplicate email, invalid file type) covered.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 4 (active — in progress / todo) == -->
+
+    <record id="task_ecom_s4_cart_api" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">Shopping Cart API (Add, Update, Remove, Clear)</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-25</field>
+        <field name="date_started">2026-04-14 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Build cart session management using Redis: add item (with quantity), update quantity, remove item, clear cart, and retrieve cart with real-time pricing. Cart persists for guests (cookie session) and members (account-linked).</p>]]></field>
+        <field name="acceptance_criteria">Cart persists across browser tabs. Out-of-stock items are flagged but not auto-removed. Cart total recalculates on quantity change. Guest cart merges with member cart on login.</field>
+    </record>
+
+    <record id="task_ecom_s4_checkout" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">Multi-Step Checkout Flow (Address → Shipping → Payment)</field>
+        <field name="task_type">story</field>
+        <field name="state">todo</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_dang_thi_lan"/>
+        <field name="date_deadline">2026-05-02</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_uiux'))]"/>
+        <field name="description"><![CDATA[<p>Build the 3-step checkout wizard: (1) Delivery address entry/selection from saved addresses, (2) Shipping method selection with estimated delivery dates, (3) Payment method selection with order summary confirmation.</p>]]></field>
+        <field name="acceptance_criteria">Form validation shows inline errors. Progress steps are clickable to go back. Order summary updates dynamically on shipping method change. Works on mobile viewport (375px+).</field>
+    </record>
+
+    <record id="task_ecom_s4_payment" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">VNPay &amp; MoMo Payment Gateway Integration</field>
+        <field name="task_type">story</field>
+        <field name="state">todo</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-05-05</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_security'))]"/>
+        <field name="description"><![CDATA[<p>Integrate VNPay QR and MoMo e-wallet payment flows. Handle payment initiation, IPN webhook callbacks for real-time status updates, and payment confirmation emails. Implement idempotency keys to prevent double-charging.</p>]]></field>
+        <field name="acceptance_criteria">Payment completes in sandbox within 30 seconds. IPN webhook verified with HMAC signature. Duplicate payment callbacks handled idempotently. Refund flow documented.</field>
+    </record>
+
+    <record id="task_ecom_s4_order_mgmt" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">Order Management System (Create, Track, Cancel)</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-05-05</field>
+        <field name="date_started">2026-04-16 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Build order lifecycle management: order creation on payment success, status transitions (pending → confirmed → shipped → delivered → completed/cancelled), order history for customers, and admin order management dashboard.</p>]]></field>
+        <field name="acceptance_criteria">Order status updates visible to customer within 1 minute. Order cancellation allowed only before shipping. Cancellation triggers stock restoration. Admin can update tracking number.</field>
+    </record>
+
+    <!-- == Backlog Tasks (no sprint) == -->
+
+    <record id="task_ecom_backlog_email" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Transactional Email Notification System</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">1</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">20.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Set up SendGrid transactional email service for: order confirmation, order shipped (with tracking link), order delivered, password reset, and welcome email after registration. Use HTML email templates with brand styling.</p>]]></field>
+    </record>
+
+    <record id="task_ecom_backlog_coupons" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Coupon &amp; Discount Code Module</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">0</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">32.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build a coupon management system: percentage or fixed-amount discounts, minimum order value, usage limits, expiry dates, and single-use codes. Coupon validation at checkout. Admin UI for creating and monitoring coupons.</p>]]></field>
+    </record>
+
+    <!-- == Bugs == -->
+
+    <record id="bug_ecom_001" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">Product images not displaying on iOS Safari 17</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reported_by" ref="agentx_project_management.partner_nguyen_trading_co"/>
+        <field name="date_reported">2026-04-15</field>
+        <field name="date_confirmed">2026-04-16</field>
+        <field name="environment">iOS 17.4, Safari 17 — iPhone 14 Pro / iPhone 15</field>
+        <field name="description"><![CDATA[<p>Product images on both the listing page and detail page are showing broken image icons on iOS Safari 17. The issue does not occur on Chrome for iOS or on desktop Safari.</p>]]></field>
+        <field name="steps_to_reproduce">1. Open product listing page on iPhone (iOS 17.4) using Safari browser.
+2. Observe that all product images are displayed as broken image icons.
+3. Open the same URL on Chrome for iOS — images display correctly.
+4. Network tab shows 403 Forbidden responses for image CDN URLs in Safari.</field>
+        <field name="expected_behavior">Product images should display correctly on all browsers including iOS Safari, matching the appearance on desktop Chrome.</field>
+        <field name="actual_behavior">All product images show broken image icons on iOS Safari 17. Network inspection reveals 403 Forbidden errors from the Cloudflare R2 CDN. Suspected cause: Safari's cross-origin cookie handling with CDN signed URLs.</field>
+    </record>
+
+    <record id="bug_ecom_002" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_3"/>
+        <field name="related_task_id" ref="agentx_project_management.task_ecom_s3_search"/>
+        <field name="name">Elasticsearch returns zero results for Vietnamese diacritic queries</field>
+        <field name="state">confirmed</field>
+        <field name="priority">3</field>
+        <field name="severity">critical</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reported_by" ref="agentx_project_management.partner_nguyen_trading_co"/>
+        <field name="date_reported">2026-04-05</field>
+        <field name="date_confirmed">2026-04-07</field>
+        <field name="environment">Staging — Elasticsearch 8.12, Python 3.11</field>
+        <field name="description"><![CDATA[<p>When customers search using fully-diacriticized Vietnamese words (e.g., "áo thun" or "giày dép"), the search returns zero results even though products with matching names exist in the index. Searching without diacritics (e.g., "ao thun") returns correct results.</p>]]></field>
+        <field name="steps_to_reproduce">1. Go to product search bar.
+2. Type "áo thun" (T-shirt in Vietnamese with tone marks).
+3. Observe zero results are returned.
+4. Type "ao thun" (without diacritics) — correct products appear.</field>
+        <field name="expected_behavior">Search should return relevant products for both diacriticized ("áo thun") and non-diacriticized ("ao thun") Vietnamese queries.</field>
+        <field name="actual_behavior">Diacriticized Vietnamese search returns zero results. The icu_folding token filter is configured but the query analyzer does not apply the same folding to search terms.</field>
+    </record>
+
+    <record id="bug_ecom_003" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Category filter selection is reset when navigating to page 2</field>
+        <field name="state">new</field>
+        <field name="priority">1</field>
+        <field name="severity">minor</field>
+        <field name="reported_by" ref="agentx_project_management.partner_nguyen_trading_co"/>
+        <field name="date_reported">2026-04-17</field>
+        <field name="environment">Production — Chrome 124, Windows 11</field>
+        <field name="description"><![CDATA[<p>When a user selects one or more category filters on the product listing page and then clicks to page 2, all selected filters are reset and the page shows unfiltered results.</p>]]></field>
+        <field name="steps_to_reproduce">1. Go to /products page.
+2. Select 2 or more category checkboxes in the filter sidebar.
+3. Products are filtered correctly on page 1.
+4. Click the "Next page" button or page 2 in pagination.
+5. Filters are cleared and all products (unfiltered) appear on page 2.</field>
+        <field name="expected_behavior">Selected filters should persist across pagination pages. URL should reflect both active filters and page number.</field>
+        <field name="actual_behavior">Filter state is lost on pagination. The URL shows ?page=2 but category filter params are dropped. This is a state management bug in the React pagination component.</field>
+    </record>
+
+    <record id="bug_ecom_004" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_4"/>
+        <field name="name">API response timeout when listing products with 1000+ records</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_reported">2026-04-10</field>
+        <field name="date_confirmed">2026-04-11</field>
+        <field name="environment">Staging — PostgreSQL 16, 1,200 product records loaded</field>
+        <field name="description"><![CDATA[<p>The GET /api/v1/products endpoint times out (30s) when the product database has more than 1,000 records. The response time grows from ~80ms (100 products) to 32,000ms (1,200 products) — a non-linear performance degradation.</p>]]></field>
+        <field name="steps_to_reproduce">1. Load 1,200 product records into staging database using the seed script.
+2. Call GET /api/v1/products?page=1&amp;page_size=24.
+3. Observe the request takes over 30 seconds and returns a 504 Gateway Timeout.</field>
+        <field name="expected_behavior">Product listing API should respond in under 500ms regardless of total product count in the database, using proper SQL indexing and query optimization.</field>
+        <field name="actual_behavior">Query execution plan shows a full table scan on the products table with no index on the sorting column (created_at). Adding an index on (category_id, created_at) should resolve the issue.</field>
+    </record>
+
+    <record id="bug_ecom_005" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_ecom_2"/>
+        <field name="related_task_id" ref="agentx_project_management.task_ecom_s2_user_auth"/>
+        <field name="name">Login session expires prematurely on mobile browsers</field>
+        <field name="state">resolved</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reported_by" ref="agentx_project_management.partner_nguyen_trading_co"/>
+        <field name="date_reported">2026-03-18</field>
+        <field name="date_confirmed">2026-03-19</field>
+        <field name="date_resolved">2026-04-01</field>
+        <field name="environment">Staging — Chrome Mobile 124, Android 13 / iOS 17</field>
+        <field name="resolution">Root cause: The JWT refresh token expiry was incorrectly set to 1 hour instead of 30 days in the production environment config. Fixed by correcting the REFRESH_TOKEN_EXPIRE_DAYS environment variable and deploying the updated .env.production. Verified in staging — session now persists for 30 days with automatic token refresh on active sessions.</field>
+        <field name="description"><![CDATA[<p>Logged-in users on mobile browsers are being logged out after approximately 1 hour of inactivity, even though the expected session duration is 30 days.</p>]]></field>
+        <field name="steps_to_reproduce">1. Log in on Chrome Mobile (Android).
+2. Leave the app idle for 65 minutes.
+3. Open the app — redirected to login page.
+4. Expected: user should remain logged in for 30 days.</field>
+        <field name="expected_behavior">User should remain logged in for 30 days with automatic token refresh on activity.</field>
+        <field name="actual_behavior">Session expires after ~1 hour. JWT refresh token had incorrect expiry set in staging environment variables.</field>
+    </record>
+
+    <!-- == Milestones == -->
+
+    <record id="milestone_ecom_1" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Architecture &amp; Infrastructure Setup Complete</field>
+        <field name="date_deadline">2026-02-12</field>
+        <field name="state">achieved</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="description">CI/CD pipelines live, Docker environment ready, system architecture documented and approved, base API framework deployed to staging.</field>
+    </record>
+
+    <record id="milestone_ecom_2" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Core Product Catalog &amp; User Auth Live on Staging</field>
+        <field name="date_deadline">2026-03-31</field>
+        <field name="state">achieved</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="description">Complete user authentication flows (register, login, OAuth, password reset) and full product catalog CRUD APIs deployed to staging. Client signed off on Sprint 2 demo.</field>
+    </record>
+
+    <record id="milestone_ecom_3" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">MVP Launch — Checkout &amp; Payment Ready</field>
+        <field name="date_deadline">2026-05-15</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="description">Shopping cart, checkout flow, VNPay and MoMo payment integrations completed and tested. UAT passed by client. Ready for production deployment.</field>
+    </record>
+
+    <record id="milestone_ecom_4" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Production Launch &amp; Hypercare</field>
+        <field name="date_deadline">2026-06-30</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="description">Full platform deployed to production with all contracted features. 2-week hypercare period with dedicated support team begins.</field>
+    </record>
+
+    <!-- == Acceptance Criteria == -->
+
+    <record id="acceptance_ecom_auth" model="agentx.acceptance">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">User Authentication &amp; Account Security</field>
+        <field name="state">approved</field>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_submitted">2026-03-20</field>
+        <field name="date_reviewed">2026-03-25</field>
+        <field name="description"><![CDATA[<p>Acceptance criteria for the complete user authentication and security module, covering registration, login, social auth, and account security features.</p>]]></field>
+        <field name="review_notes">All 4 passing criteria verified in staging with real test accounts. The account lockout (line 4) passed after the fix deployed on 2026-03-24. Approved for production.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_auth_1" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_auth"/>
+        <field name="sequence">10</field>
+        <field name="description">User can register with a valid email address and password meeting strength requirements (min 8 chars, 1 uppercase, 1 number)</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested with 20 different valid and invalid combinations. Password strength indicator works correctly.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_auth_2" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_auth"/>
+        <field name="sequence">20</field>
+        <field name="description">User can login using Google OAuth 2.0 — account is created automatically if first-time login</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested with 3 different Google accounts. Auto-created accounts receive welcome email.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_auth_3" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_auth"/>
+        <field name="sequence">30</field>
+        <field name="description">Password reset email is delivered within 60 seconds and the reset link expires after 15 minutes</field>
+        <field name="result">pass</field>
+        <field name="notes">Average delivery time: 8 seconds via SendGrid. Link expiry confirmed — expired links show clear error message.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_auth_4" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_auth"/>
+        <field name="sequence">40</field>
+        <field name="description">Account is locked for 30 minutes after 5 consecutive failed login attempts and admin is notified</field>
+        <field name="result">pass</field>
+        <field name="notes">Fixed and retested on 2026-03-24 after initial fail. Lockout counter now resets correctly after successful login.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_auth_5" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_auth"/>
+        <field name="sequence">50</field>
+        <field name="description">JWT access token expires after 1 hour; refresh token renews silently in the background for active sessions</field>
+        <field name="result">pass</field>
+        <field name="notes">Verified using mocked time progression in unit tests and manual testing on staging.</field>
+    </record>
+
+    <record id="acceptance_ecom_catalog" model="agentx.acceptance">
+        <field name="project_id" ref="agentx_project_management.project_ecommerce"/>
+        <field name="name">Product Catalog Management &amp; Search</field>
+        <field name="state">in_review</field>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_submitted">2026-04-12</field>
+        <field name="description"><![CDATA[<p>Acceptance criteria for product catalog CRUD, image management, search functionality, and category filtering. Under review — awaiting bug fixes for criteria 2 and 4.</p>]]></field>
+        <field name="review_notes">Criteria 2 (Vietnamese search) and 4 (mobile images) are currently blocked by open bugs. Review on hold until BUG-002 and BUG-001 are resolved. Criteria 1, 3, and 5 passed.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_catalog_1" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_catalog"/>
+        <field name="sequence">10</field>
+        <field name="description">Admin can create, edit, and delete products including uploading up to 8 product images per product</field>
+        <field name="result">pass</field>
+        <field name="notes">CRUD operations tested with 50 product records. Image upload works correctly for JPEG, PNG, and WebP formats.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_catalog_2" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_catalog"/>
+        <field name="sequence">20</field>
+        <field name="description">Product search returns relevant results for both Vietnamese diacritic and non-diacritic queries (e.g., "áo thun" and "ao thun" return same results)</field>
+        <field name="result">fail</field>
+        <field name="notes">BLOCKED — BUG-002 open. Diacriticized Vietnamese queries return zero results. Elasticsearch ICU analyzer misconfiguration. ETA for fix: Sprint 4.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_catalog_3" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_catalog"/>
+        <field name="sequence">30</field>
+        <field name="description">Category-based filtering works correctly and selected filters persist across pagination pages</field>
+        <field name="result">fail</field>
+        <field name="notes">BLOCKED — BUG-003 open. Filters reset on pagination. Fix in progress by frontend team.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_catalog_4" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_catalog"/>
+        <field name="sequence">40</field>
+        <field name="description">Product images display correctly on all major browsers including iOS Safari 17 and Chrome Mobile</field>
+        <field name="result">fail</field>
+        <field name="notes">BLOCKED — BUG-001 open. iOS Safari shows broken images (403 CDN error). Android Chrome works correctly.</field>
+    </record>
+
+    <record id="acceptance_line_ecom_catalog_5" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_ecom_catalog"/>
+        <field name="sequence">50</field>
+        <field name="description">Admin can bulk import up to 5,000 products from a CSV file with validation errors reported per row</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested with 5,000-row CSV. Import completes in 45 seconds. Validation errors exported to separate error report CSV.</field>
+    </record>
+
+</odoo>

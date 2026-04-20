@@ -45,7 +45,12 @@
         'views/agentx_timesheet_views.xml',
         'views/menu_views.xml',
     ],
-    'demo': [],
+    'demo': [
+        'demo/demo_base_data.xml',
+        'demo/demo_project_banking.xml',
+        'demo/demo_project_crm.xml',
+        'demo/demo_project_ecommerce.xml'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

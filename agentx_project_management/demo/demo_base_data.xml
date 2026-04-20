@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         DEMO CUSTOMERS (res.partner)
+    ================================================================ -->
+
+    <record id="partner_nguyen_trading_co" model="res.partner">
+        <field name="name">Nguyen Trading Company</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">info@nguyentradingco.vn</field>
+        <field name="phone">+84 28 3823 4567</field>
+        <field name="street">45 Nguyen Hue Boulevard, District 1</field>
+        <field name="city">Ho Chi Minh City</field>
+        <field name="country_id" ref="base.vn"/>
+        <field name="comment">Leading retail and e-commerce company in southern Vietnam. Looking to digitize their sales and distribution channels.</field>
+    </record>
+
+    <record id="partner_techvision_corp" model="res.partner">
+        <field name="name">TechVision Corporation</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">contact@techvision.com.vn</field>
+        <field name="phone">+84 24 3719 8800</field>
+        <field name="street">12 Lang Ha Street, Dong Da District</field>
+        <field name="city">Hanoi</field>
+        <field name="country_id" ref="base.vn"/>
+        <field name="comment">Fast-growing B2B SaaS company focused on sales automation. Offices in Hanoi and HCMC.</field>
+    </record>
+
+    <record id="partner_vietbank_financial" model="res.partner">
+        <field name="name">VietBank Financial Services</field>
+        <field name="is_company" eval="True"/>
+        <field name="email">it-department@vietbank.com.vn</field>
+        <field name="phone">+84 28 3910 5600</field>
+        <field name="street">8 Me Linh Square, District 1</field>
+        <field name="city">Ho Chi Minh City</field>
+        <field name="country_id" ref="base.vn"/>
+        <field name="comment">Mid-sized commercial bank with 120 branches nationwide. Undergoing digital transformation to launch a mobile banking platform.</field>
+    </record>
+
+    <!-- ================================================================
+         DEMO EMPLOYEES (hr.employee)
+    ================================================================ -->
+
+    <record id="employee_tran_van_minh" model="hr.employee">
+        <field name="name">Tran Van Minh</field>
+        <field name="job_title">Senior Project Manager</field>
+        <field name="work_email">minh.tran@odooagentx.com</field>
+        <field name="work_phone">+84 90 123 4567</field>
+    </record>
+
+    <record id="employee_le_thi_hoa" model="hr.employee">
+        <field name="name">Le Thi Hoa</field>
+        <field name="job_title">Project Manager / Business Analyst</field>
+        <field name="work_email">hoa.le@odooagentx.com</field>
+        <field name="work_phone">+84 91 234 5678</field>
+    </record>
+
+    <record id="employee_nguyen_duc_thanh" model="hr.employee">
+        <field name="name">Nguyen Duc Thanh</field>
+        <field name="job_title">Lead Software Engineer</field>
+        <field name="work_email">thanh.nguyen@odooagentx.com</field>
+        <field name="work_phone">+84 93 345 6789</field>
+    </record>
+
+    <record id="employee_pham_thi_thu" model="hr.employee">
+        <field name="name">Pham Thi Thu</field>
+        <field name="job_title">Frontend Developer</field>
+        <field name="work_email">thu.pham@odooagentx.com</field>
+        <field name="work_phone">+84 94 456 7890</field>
+    </record>
+
+    <record id="employee_hoang_van_long" model="hr.employee">
+        <field name="name">Hoang Van Long</field>
+        <field name="job_title">Senior Backend Developer</field>
+        <field name="work_email">long.hoang@odooagentx.com</field>
+        <field name="work_phone">+84 96 567 8901</field>
+    </record>
+
+    <record id="employee_vo_thi_mai" model="hr.employee">
+        <field name="name">Vo Thi Mai</field>
+        <field name="job_title">QA Engineer</field>
+        <field name="work_email">mai.vo@odooagentx.com</field>
+        <field name="work_phone">+84 97 678 9012</field>
+    </record>
+
+    <record id="employee_bui_duc_nam" model="hr.employee">
+        <field name="name">Bui Duc Nam</field>
+        <field name="job_title">DevOps Engineer</field>
+        <field name="work_email">nam.bui@odooagentx.com</field>
+        <field name="work_phone">+84 98 789 0123</field>
+    </record>
+
+    <record id="employee_dang_thi_lan" model="hr.employee">
+        <field name="name">Dang Thi Lan</field>
+        <field name="job_title">UI/UX Designer</field>
+        <field name="work_email">lan.dang@odooagentx.com</field>
+        <field name="work_phone">+84 99 890 1234</field>
+    </record>
+
+    <!-- ================================================================
+         DEMO TAGS (agentx.tag)
+    ================================================================ -->
+
+    <record id="tag_frontend" model="agentx.tag">
+        <field name="name">Frontend</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="tag_backend" model="agentx.tag">
+        <field name="name">Backend</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="tag_api" model="agentx.tag">
+        <field name="name">API</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="tag_database" model="agentx.tag">
+        <field name="name">Database</field>
+        <field name="color">10</field>
+    </record>
+
+    <record id="tag_uiux" model="agentx.tag">
+        <field name="name">UI/UX</field>
+        <field name="color">5</field>
+    </record>
+
+    <record id="tag_performance" model="agentx.tag">
+        <field name="name">Performance</field>
+        <field name="color">6</field>
+    </record>
+
+    <record id="tag_security" model="agentx.tag">
+        <field name="name">Security</field>
+        <field name="color">7</field>
+    </record>
+
+    <record id="tag_mobile" model="agentx.tag">
+        <field name="name">Mobile</field>
+        <field name="color">8</field>
+    </record>
+
+    <record id="tag_integration" model="agentx.tag">
+        <field name="name">Integration</field>
+        <field name="color">9</field>
+    </record>
+
+    <record id="tag_infrastructure" model="agentx.tag">
+        <field name="name">Infrastructure</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="tag_bugfix" model="agentx.tag">
+        <field name="name">Bug Fix</field>
+        <field name="color">11</field>
+    </record>
+
+    <record id="tag_testing" model="agentx.tag">
+        <field name="name">Testing</field>
+        <field name="color">0</field>
+    </record>
+
+    <record id="tag_authentication" model="agentx.tag">
+        <field name="name">Authentication</field>
+        <field name="color">7</field>
+    </record>
+
+    <record id="tag_reporting" model="agentx.tag">
+        <field name="name">Reporting</field>
+        <field name="color">3</field>
+    </record>
+
+</odoo>

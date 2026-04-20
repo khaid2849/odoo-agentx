@@ -161,9 +161,6 @@
                                     <field name="code"/>
                                 </div>
                             </div>
-                            <div class="col-2 text-end">
-                                <field name="priority" widget="priority" readonly="1"/>
-                            </div>
                         </div>
                         <div class="mb-1">
                             <field name="tag_ids" widget="many2many_tags"
@@ -174,6 +171,9 @@
                                 SP: <t t-esc="record.story_points.value"/>
                             </span>
                             <field name="assignee_id" widget="many2one_avatar_employee"/>
+                        </div>
+                        <div class="col-2">
+                            <field name="priority" widget="priority" readonly="1"/>
                         </div>
                     </t>
                 </templates>

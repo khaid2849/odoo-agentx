@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         PROJECT 2: CRM & SALES AUTOMATION SYSTEM
+         Customer: TechVision Corporation
+         Status: In Progress | Priority: Normal
+         Timeline: Feb 1, 2026 → Jul 31, 2026
+    ================================================================ -->
+
+    <record id="project_crm" model="agentx.project">
+        <field name="name">CRM &amp; Sales Automation System</field>
+        <field name="code">CRM-2026</field>
+        <field name="description"><![CDATA[
+            <p>A custom CRM and sales automation platform for TechVision Corporation to manage their B2B sales pipeline
+            across <strong>3 regional offices</strong> and a 45-person sales team. The system replaces a mix of
+            spreadsheets and a legacy on-premise CRM that lacks automation capabilities.</p>
+            <p><strong>Key deliverables:</strong></p>
+            <ul>
+                <li>Lead capture and qualification module</li>
+                <li>Visual sales pipeline with Kanban board</li>
+                <li>Automated follow-up email sequences (drip campaigns)</li>
+                <li>Sales forecasting with probability weighting</li>
+                <li>Gmail and Outlook email client integration (two-way sync)</li>
+                <li>Management reporting dashboard with KPI charts</li>
+            </ul>
+        ]]></field>
+        <field name="state">in_progress</field>
+        <field name="priority">0</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="date_end">2026-07-31</field>
+        <field name="manager_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="customer_id" ref="agentx_project_management.partner_techvision_corp"/>
+    </record>
+
+    <!-- == Team Members == -->
+
+    <record id="team_crm_pm" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="employee_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="role">pm</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="allocation_percent">70.0</field>
+        <field name="notes">PM and BA lead. Handles requirements gathering, sprint ceremonies, and weekly client demos.</field>
+    </record>
+
+    <record id="team_crm_lead_dev" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="employee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="allocation_percent">80.0</field>
+        <field name="notes">Full-stack lead developer. Owns backend API, email integration, and automation engine.</field>
+    </record>
+
+    <record id="team_crm_frontend" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="employee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="allocation_percent">80.0</field>
+        <field name="notes">Frontend developer. Owns the Kanban board, reporting dashboards, and all CRM UI components.</field>
+    </record>
+
+    <record id="team_crm_qa" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="employee_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="role">qa</field>
+        <field name="date_start">2026-02-15</field>
+        <field name="allocation_percent">50.0</field>
+        <field name="notes">QA engineer. Manages test plans, regression suite, and coordinates UAT with TechVision's sales team.</field>
+    </record>
+
+    <!-- == Sprints == -->
+
+    <record id="sprint_crm_1" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sprint 1 — Core Lead Management</field>
+        <field name="sequence">1</field>
+        <field name="state">completed</field>
+        <field name="goal">Deliver a fully functional lead management module including lead creation, contact management, customer profiles, and a data import tool. This gives the sales team an immediately usable replacement for their current spreadsheets.</field>
+        <field name="date_start">2026-02-01</field>
+        <field name="date_end">2026-03-01</field>
+        <field name="capacity">28</field>
+        <field name="velocity">31</field>
+    </record>
+
+    <record id="sprint_crm_2" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sprint 2 — Sales Pipeline &amp; Activity Tracking</field>
+        <field name="sequence">2</field>
+        <field name="state">completed</field>
+        <field name="goal">Build the visual sales pipeline Kanban board with customizable stages, deal management, activity logging, and advanced search/filtering capabilities for the sales team.</field>
+        <field name="date_start">2026-03-04</field>
+        <field name="date_end">2026-04-02</field>
+        <field name="capacity">24</field>
+        <field name="velocity">21</field>
+    </record>
+
+    <record id="sprint_crm_3" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sprint 3 — Automation &amp; Email Integration</field>
+        <field name="sequence">3</field>
+        <field name="state">active</field>
+        <field name="goal">Implement automated follow-up email sequences, sales forecasting module with probability-weighted pipeline, and Gmail/Outlook email sync integration.</field>
+        <field name="date_start">2026-04-07</field>
+        <field name="date_end">2026-05-05</field>
+        <field name="capacity">42</field>
+    </record>
+
+    <!-- == Tasks — Sprint 1 (all done) == -->
+
+    <record id="task_crm_s1_lead_mgmt" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_1"/>
+        <field name="name">Lead Management Module (Create, Qualify, Assign)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_deadline">2026-02-20</field>
+        <field name="date_started">2026-02-01 09:00:00</field>
+        <field name="date_done">2026-02-19 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Build the lead management core: create leads manually with fields (company, contact, source, budget, requirement notes), lead qualification scoring, and assignment to sales rep with notification email.</p>]]></field>
+        <field name="acceptance_criteria">Lead creation form validates all required fields. Assignment notification email sent within 30s. Lead score calculated automatically based on budget, company size, and source. Duplicate lead detection alerts are shown.</field>
+    </record>
+
+    <record id="task_crm_s1_contact_db" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_1"/>
+        <field name="name">Contact Database Schema &amp; API</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-02-12</field>
+        <field name="date_started">2026-02-01 09:00:00</field>
+        <field name="date_done">2026-02-11 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_database')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Design and implement the contact database schema supporting: individuals linked to companies, multiple phone numbers, social media profiles, custom fields, and contact tagging. Build CRUD API with search by name/company/email.</p>]]></field>
+        <field name="acceptance_criteria">Contacts support many-to-one company relationship. Custom fields are configurable by admin without code change. Full-text search covers name, email, and company fields.</field>
+    </record>
+
+    <record id="task_crm_s1_customer_profile" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_1"/>
+        <field name="name">Customer Profile 360° View</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-02-25</field>
+        <field name="date_started">2026-02-10 09:00:00</field>
+        <field name="date_done">2026-02-25 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_uiux'))]"/>
+        <field name="description"><![CDATA[<p>Build the customer 360° profile page consolidating: company info, all contacts, interaction timeline (calls, emails, meetings), open leads and deals, and total revenue to date. Sidebar shows key account stats at a glance.</p>]]></field>
+        <field name="acceptance_criteria">Profile page loads within 1 second. Timeline shows most recent 50 interactions. Revenue figure aggregated from closed-won deals. Page is accessible on tablet (1024px).</field>
+    </record>
+
+    <record id="task_crm_s1_reporting_dash" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_1"/>
+        <field name="name">Basic Sales Reporting Dashboard</field>
+        <field name="task_type">improvement</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="date_deadline">2026-02-28</field>
+        <field name="date_started">2026-02-18 09:00:00</field>
+        <field name="date_done">2026-02-28 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_reporting')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build a management dashboard with: new leads this month (vs last month), lead conversion rate, pipeline value by stage, top 5 sales reps by closed revenue, and a monthly trend chart (bar chart). Date range filter for all widgets.</p>]]></field>
+        <field name="acceptance_criteria">Dashboard widgets refresh every 5 minutes. Date range filter applies to all widgets simultaneously. Charts rendered using Chart.js. Data export to Excel available per widget.</field>
+    </record>
+
+    <record id="task_crm_s1_import_tool" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_1"/>
+        <field name="name">Data Import Tool (Excel / CSV → Leads &amp; Contacts)</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-01</field>
+        <field name="date_started">2026-02-22 09:00:00</field>
+        <field name="date_done">2026-03-01 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_integration'))]"/>
+        <field name="description"><![CDATA[<p>Build an Excel/CSV import tool with column mapping UI, data validation, duplicate detection, and error reporting. Support importing 10,000+ rows asynchronously with a progress indicator and email notification on completion.</p>]]></field>
+        <field name="acceptance_criteria">Supports .xlsx and .csv up to 10MB. Duplicate detection based on email address. Rows with errors skipped and reported in downloadable error file. Import runs as background job — does not block UI.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 2 (all done) == -->
+
+    <record id="task_crm_s2_kanban" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_2"/>
+        <field name="name">Sales Pipeline Kanban Board (Drag &amp; Drop)</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-20</field>
+        <field name="date_started">2026-03-04 09:00:00</field>
+        <field name="date_done">2026-03-19 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_uiux'))]"/>
+        <field name="description"><![CDATA[<p>Build the sales pipeline Kanban board: drag-and-drop deals between stages, deal cards showing company name, value, assigned rep, and expected close date. Column headers display total pipeline value. Stage configuration managed by admin.</p>]]></field>
+        <field name="acceptance_criteria">Drag-and-drop updates deal stage immediately via API. Pipeline total updates on drag. Stage columns are scrollable horizontally. Works on Chrome, Firefox, Edge, and Safari.</field>
+    </record>
+
+    <record id="task_crm_s2_deal_stages" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_2"/>
+        <field name="name">Deal Stage &amp; Win/Loss Management</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-22</field>
+        <field name="date_started">2026-03-04 09:00:00</field>
+        <field name="date_done">2026-03-21 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_api'))]"/>
+        <field name="description"><![CDATA[<p>Implement deal lifecycle management: create deal with value, probability, and expected close date; mark as Closed-Won or Closed-Lost with mandatory reason selection; deal history log of all stage changes with timestamps.</p>]]></field>
+        <field name="acceptance_criteria">Won/Lost reasons are configurable by admin. Deal history log is immutable (read-only). Won deals are excluded from active pipeline totals. Lost reason analytics available in dashboard.</field>
+    </record>
+
+    <record id="task_crm_s2_activity_notes" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_2"/>
+        <field name="name">Activity Log &amp; Notes Module (Calls, Emails, Meetings)</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">1</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="date_deadline">2026-03-28</field>
+        <field name="date_started">2026-03-12 09:00:00</field>
+        <field name="date_done">2026-03-28 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Build the activity timeline for leads and deals: log phone calls (duration, outcome, notes), emails (subject, recipient, summary), meetings (date, attendees, outcome), and manual notes. All activities are visible in the 360° customer profile.</p>]]></field>
+        <field name="acceptance_criteria">Activity types are extensible. Upcoming scheduled activities trigger reminder notifications. Activity timeline sorted by date descending. Overdue activities highlighted in red.</field>
+    </record>
+
+    <record id="task_crm_s2_advanced_search" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_2"/>
+        <field name="name">Advanced Lead &amp; Deal Search with Saved Filters</field>
+        <field name="task_type">improvement</field>
+        <field name="state">done</field>
+        <field name="priority">0</field>
+        <field name="story_points">3</field>
+        <field name="estimated_hours">8.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="date_deadline">2026-04-01</field>
+        <field name="date_started">2026-03-25 09:00:00</field>
+        <field name="date_done">2026-04-01 15:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build an advanced search filter panel with multi-field filtering (assigned rep, stage, date range, deal value range, tags) and the ability to save and name filter presets per user. Share filter presets across teams.</p>]]></field>
+        <field name="acceptance_criteria">Filter presets save and reload correctly. Filters can be combined (AND logic). Saved filters visible in "My Filters" dropdown. Shared filters visible to all team members.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 3 (active — in progress / todo) == -->
+
+    <record id="task_crm_s3_email_sequences" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_3"/>
+        <field name="name">Automated Follow-Up Email Sequences (Drip Campaigns)</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_deadline">2026-04-28</field>
+        <field name="date_started">2026-04-07 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_backend')), (4, ref('agentx_project_management.tag_integration'))]"/>
+        <field name="description"><![CDATA[<p>Build a drip campaign engine: define email sequences with configurable delays (send after X days if no reply), personalization tokens, stop conditions (on reply, on meeting booked, on deal won/lost), and open/click tracking.</p>]]></field>
+        <field name="acceptance_criteria">Sequences support up to 10 steps. Emails personalized with contact first name, company, and assigned rep. Sequence stops automatically on reply. Open and click rates tracked per step. Unsubscribe link mandatory in all emails.</field>
+    </record>
+
+    <record id="task_crm_s3_forecasting" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_3"/>
+        <field name="name">Sales Forecasting Module with Probability Weighting</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-30</field>
+        <field name="date_started">2026-04-08 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_reporting')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build the sales forecast view: each pipeline stage has a configurable win probability percentage. Forecast shows weighted pipeline value (deal value × stage probability) by month. Compare forecast vs actual closed revenue on a line chart.</p>]]></field>
+        <field name="acceptance_criteria">Forecast recalculates within 2 seconds when a deal is moved. Monthly and quarterly views available. Manager can override individual deal probability. Forecast data exportable to Excel.</field>
+    </record>
+
+    <record id="task_crm_s3_email_integration" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_3"/>
+        <field name="name">Gmail &amp; Outlook Email Sync Integration (Two-Way)</field>
+        <field name="task_type">story</field>
+        <field name="state">todo</field>
+        <field name="priority">1</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-05-03</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_security'))]"/>
+        <field name="description"><![CDATA[<p>Integrate Gmail (Google Workspace) and Microsoft 365 Outlook via OAuth 2.0 for two-way email sync: emails sent to/from a CRM contact are automatically logged in their activity timeline. Compose and send emails directly from CRM.</p>]]></field>
+        <field name="acceptance_criteria">OAuth connection flow completes in under 30 seconds. Emails from last 30 days auto-imported on first connect. New emails sync within 5 minutes. Disconnect option available in settings.</field>
+    </record>
+
+    <record id="task_crm_s3_team_dashboard" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_3"/>
+        <field name="name">Team Performance KPI Dashboard for Managers</field>
+        <field name="task_type">story</field>
+        <field name="state">todo</field>
+        <field name="priority">1</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_pham_thi_thu"/>
+        <field name="date_deadline">2026-05-05</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_reporting')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build a manager-only dashboard showing: per-rep leads created, calls logged, deals closed (count and value), win rate, and average deal cycle time for the selected period. Leaderboard ranking with comparison to previous period.</p>]]></field>
+        <field name="acceptance_criteria">Dashboard restricted to manager role. Leaderboard sortable by any KPI column. Period selector: this week, this month, this quarter, custom range. All charts printable to PDF.</field>
+    </record>
+
+    <!-- == Backlog Tasks == -->
+
+    <record id="task_crm_backlog_mobile" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Mobile CRM Application (iOS &amp; Android)</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">0</field>
+        <field name="story_points">21</field>
+        <field name="estimated_hours">80.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>React Native mobile app for sales reps in the field: view leads and deals, log calls and notes, check-in to client visits via GPS, receive push notifications for assigned leads and deal reminders. Offline mode for poor connectivity areas.</p>]]></field>
+    </record>
+
+    <record id="task_crm_backlog_whatsapp" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">WhatsApp Business API Integration</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">0</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_mobile'))]"/>
+        <field name="description"><![CDATA[<p>Integrate WhatsApp Business API (via 360dialog): send templated messages from CRM, receive inbound WhatsApp messages logged in contact timeline, set up automated welcome message for new leads. Requires TechVision's WhatsApp Business Account approval.</p>]]></field>
+    </record>
+
+    <!-- == Bugs == -->
+
+    <record id="bug_crm_001" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_2"/>
+        <field name="related_task_id" ref="agentx_project_management.task_crm_s1_import_tool"/>
+        <field name="name">CSV lead import silently fails for company names containing special characters</field>
+        <field name="state">confirmed</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reported_by" ref="agentx_project_management.partner_techvision_corp"/>
+        <field name="date_reported">2026-03-15</field>
+        <field name="date_confirmed">2026-03-17</field>
+        <field name="environment">Staging — Python 3.11, openpyxl 3.1.2, CSV with UTF-8 encoding</field>
+        <field name="description"><![CDATA[<p>When importing a CSV file containing company names with special characters such as ampersands (&amp;), quotes, or parentheses, those specific rows are silently skipped. No error is reported for the skipped rows in the import error report.</p>]]></field>
+        <field name="steps_to_reproduce">1. Create a CSV with a company name containing "&amp;" (e.g., "Smith &amp; Jones Ltd").
+2. Upload via Import Tool → Leads.
+3. Map columns and start import.
+4. Row with special character company name is skipped but not listed in the error report.
+5. Check database — that lead was not created.</field>
+        <field name="expected_behavior">All rows should be imported correctly regardless of special characters in company names. Rows that fail validation should appear in the downloadable error report with a clear reason.</field>
+        <field name="actual_behavior">Rows with special characters in the company name field are silently skipped. Root cause: the CSV parser uses the company name as a unique key without escaping — the SQL INSERT fails silently due to unescaped characters in the parameterized query.</field>
+    </record>
+
+    <record id="bug_crm_002" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_crm_3"/>
+        <field name="related_task_id" ref="agentx_project_management.task_crm_s1_lead_mgmt"/>
+        <field name="name">Lead assignment email notification not sent to newly assigned sales rep</field>
+        <field name="state">in_progress</field>
+        <field name="priority">3</field>
+        <field name="severity">critical</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reported_by" ref="agentx_project_management.partner_techvision_corp"/>
+        <field name="date_reported">2026-03-22</field>
+        <field name="date_confirmed">2026-03-24</field>
+        <field name="environment">Staging and Production — SendGrid API v3, Python Celery task queue</field>
+        <field name="description"><![CDATA[<p>When a lead is assigned (or reassigned) to a sales rep via the CRM interface or the API, the expected email notification is not delivered to the assigned user. The Celery task log shows the task was queued but the SendGrid API returns a 400 error on delivery attempts.</p>]]></field>
+        <field name="steps_to_reproduce">1. Log in as manager. Go to Leads list.
+2. Open any lead and change the Assigned Rep dropdown to a different user.
+3. Save the lead.
+4. Check the newly assigned sales rep's email — no notification received.
+5. Check Celery task log — task queued but SendGrid API returns 400 Bad Request.</field>
+        <field name="expected_behavior">Assigned sales rep receives an email within 30 seconds of assignment with the lead's company name, contact, and a direct link to the lead in CRM.</field>
+        <field name="actual_behavior">No email is sent. Celery task shows SendGrid 400 error: "The from address does not match a verified Sender Identity." The notification email uses a dynamic from address that is not verified in the SendGrid account.</field>
+    </record>
+
+    <record id="bug_crm_003" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sales dashboard chart displays incorrect total revenue for Q1 2026</field>
+        <field name="state">new</field>
+        <field name="priority">1</field>
+        <field name="severity">minor</field>
+        <field name="reported_by" ref="agentx_project_management.partner_techvision_corp"/>
+        <field name="date_reported">2026-04-05</field>
+        <field name="environment">Staging — Dashboard, Q1 2026 date range filter</field>
+        <field name="description"><![CDATA[<p>When the sales dashboard date range is set to Q1 2026 (Jan 1 – Mar 31), the "Total Closed Revenue" widget shows a figure that is approximately 12% lower than the actual sum of closed-won deals from the same period in the deals list view.</p>]]></field>
+        <field name="steps_to_reproduce">1. Go to Sales Dashboard.
+2. Set date range filter to Q1 2026 (Jan 1 – Mar 31, 2026).
+3. Note the "Total Closed Revenue" figure (e.g., VND 2.15 billion).
+4. Go to Deals → filter by Closed-Won, same date range.
+5. Manually sum the deal values — result is VND 2.44 billion.
+6. Discrepancy: the dashboard shows ~12% less than the actual total.</field>
+        <field name="expected_behavior">The "Total Closed Revenue" dashboard widget should match the exact sum of all Closed-Won deal values for the selected date range.</field>
+        <field name="actual_behavior">Dashboard total is ~12% lower than actual. Suspected cause: the dashboard SQL query uses deal close date from the deal creation timestamp rather than the date the deal was marked as Closed-Won.</field>
+    </record>
+
+    <!-- == Milestones == -->
+
+    <record id="milestone_crm_1" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Core CRM Module UAT Approved by Client</field>
+        <field name="date_deadline">2026-03-15</field>
+        <field name="state">achieved</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="description">Lead management, contact database, customer 360° profiles, and data import tool all passed UAT with TechVision's sales team. 12 users tested the system over 3 days. Sign-off received on 2026-03-15.</field>
+    </record>
+
+    <record id="milestone_crm_2" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sales Pipeline &amp; Activity Tracking Go-Live</field>
+        <field name="date_deadline">2026-04-15</field>
+        <field name="state">achieved</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="description">Kanban pipeline, deal management, activity logging, and advanced search deployed to production. 45 sales users migrated to the new system. Legacy CRM decommissioned on 2026-04-15.</field>
+    </record>
+
+    <record id="milestone_crm_3" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Full CRM Platform Deployment (Automation + Email Sync)</field>
+        <field name="date_deadline">2026-07-31</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="description">All modules live: automated email sequences, sales forecasting, Gmail/Outlook sync, team KPI dashboard, and mobile CRM app. Training delivered to all users. Hypercare period ends.</field>
+    </record>
+
+    <!-- == Acceptance Criteria == -->
+
+    <record id="acceptance_crm_lead_mgmt" model="agentx.acceptance">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Lead Management System UAT</field>
+        <field name="state">approved</field>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_submitted">2026-03-10</field>
+        <field name="date_reviewed">2026-03-15</field>
+        <field name="description"><![CDATA[<p>UAT acceptance criteria for the complete lead management module. Tested by TechVision's Sales Manager and 3 sales team members over 2 days.</p>]]></field>
+        <field name="review_notes">All 5 criteria passed after the CSV import fix was deployed on 2026-03-13. Client signed off. Approved for production deployment.</field>
+    </record>
+
+    <record id="acceptance_line_crm_lead_1" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_lead_mgmt"/>
+        <field name="sequence">10</field>
+        <field name="description">Sales rep can manually create a lead with all required fields: company, primary contact, lead source, estimated budget, and requirement notes</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested creation of 25 leads. Form validation works. Required field errors display inline.</field>
+    </record>
+
+    <record id="acceptance_line_crm_lead_2" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_lead_mgmt"/>
+        <field name="sequence">20</field>
+        <field name="description">Admin can bulk import leads from CSV/Excel including company names with special characters (&amp;, ', parentheses)</field>
+        <field name="result">pass</field>
+        <field name="notes">Re-tested after BUG-CRM-001 fix deployed on 2026-03-13. Imported 500 rows including 45 with special characters — all imported correctly.</field>
+    </record>
+
+    <record id="acceptance_line_crm_lead_3" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_lead_mgmt"/>
+        <field name="sequence">30</field>
+        <field name="description">Assigned sales rep receives email notification within 30 seconds of being assigned a lead</field>
+        <field name="result">pass</field>
+        <field name="notes">BUG-CRM-002 fixed on 2026-03-12 (sender identity verified in SendGrid). Notification delivery time: average 8 seconds. Tested with 5 different user accounts.</field>
+    </record>
+
+    <record id="acceptance_line_crm_lead_4" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_lead_mgmt"/>
+        <field name="sequence">40</field>
+        <field name="description">Lead status can be progressed through all pipeline stages: New → Contacted → Qualified → Proposal Sent → Negotiating → Closed</field>
+        <field name="result">pass</field>
+        <field name="notes">All stage transitions tested. Stage change timestamps recorded correctly. Cannot skip stages — validated.</field>
+    </record>
+
+    <record id="acceptance_line_crm_lead_5" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_lead_mgmt"/>
+        <field name="sequence">50</field>
+        <field name="description">System detects and alerts on duplicate leads based on email address or company name + phone combination</field>
+        <field name="result">pass</field>
+        <field name="notes">Duplicate detection triggers alert modal before saving. Alert shows existing lead's assigned rep and creation date. Sales rep can proceed or cancel.</field>
+    </record>
+
+    <record id="acceptance_crm_pipeline" model="agentx.acceptance">
+        <field name="project_id" ref="agentx_project_management.project_crm"/>
+        <field name="name">Sales Pipeline Kanban Board UAT</field>
+        <field name="state">approved</field>
+        <field name="reviewer_id" ref="agentx_project_management.employee_le_thi_hoa"/>
+        <field name="date_submitted">2026-04-08</field>
+        <field name="date_reviewed">2026-04-12</field>
+        <field name="description"><![CDATA[<p>UAT acceptance criteria for the sales pipeline Kanban board, deal management, and activity tracking module. Tested by TechVision's entire sales team (45 users) during a 2-day UAT workshop.</p>]]></field>
+        <field name="review_notes">All criteria passed. Minor UX feedback (card color coding for deal age) addressed as improvement in Sprint 3. Approved for production on 2026-04-12.</field>
+    </record>
+
+    <record id="acceptance_line_crm_pipeline_1" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_pipeline"/>
+        <field name="sequence">10</field>
+        <field name="description">Deals are displayed as cards in a horizontal Kanban board with stages customizable by admin</field>
+        <field name="result">pass</field>
+        <field name="notes">6 default stages configured. Admin can add/rename/reorder/delete stages. Stage deletion blocked if it contains open deals.</field>
+    </record>
+
+    <record id="acceptance_line_crm_pipeline_2" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_pipeline"/>
+        <field name="sequence">20</field>
+        <field name="description">Drag-and-drop moves a deal to a new stage and the column totals update immediately without page refresh</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested on Chrome, Firefox, and Safari. Mobile drag-and-drop works on iPad. Column totals update within 500ms via optimistic UI update.</field>
+    </record>
+
+    <record id="acceptance_line_crm_pipeline_3" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_pipeline"/>
+        <field name="sequence">30</field>
+        <field name="description">Closing a deal as Won or Lost requires selecting a reason from a configurable list</field>
+        <field name="result">pass</field>
+        <field name="notes">Won/Lost reason modal tested. Mandatory reason selection enforced. Default reasons pre-configured; admin can customize the list.</field>
+    </record>
+
+    <record id="acceptance_line_crm_pipeline_4" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_crm_pipeline"/>
+        <field name="sequence">40</field>
+        <field name="description">Sales rep can log activities (call, email, meeting, note) directly from the deal card and view full activity history</field>
+        <field name="result">pass</field>
+        <field name="notes">Activity logging modal accessible from quick actions on deal card. All 4 activity types work. History timeline correctly sorted by date.</field>
+    </record>
+
+</odoo>

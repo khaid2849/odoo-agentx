@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         PROJECT 3: MOBILE BANKING APPLICATION
+         Customer: VietBank Financial Services
+         Status: In Progress | Priority: Critical
+         Timeline: Mar 2, 2026 → Sep 30, 2026
+    ================================================================ -->
+
+    <record id="project_banking" model="agentx.project">
+        <field name="name">VietBank Mobile Banking App</field>
+        <field name="code">BANK-2026</field>
+        <field name="description"><![CDATA[
+            <p>A secure, PCI-DSS compliant mobile banking application for VietBank Financial Services
+            targeting <strong>2 million active users</strong> across iOS and Android platforms.
+            This is a greenfield project replacing the bank's outdated USSD-based mobile service.</p>
+            <p><strong>Key deliverables:</strong></p>
+            <ul>
+                <li>Biometric and PIN-based authentication (Face ID, Touch ID, Fingerprint)</li>
+                <li>Account overview: balances, transaction history, e-statements</li>
+                <li>Domestic fund transfers (same-bank and interbank via Napas 247)</li>
+                <li>Bill payments: electricity, water, telecom, internet</li>
+                <li>QR code payments (VietQR standard)</li>
+                <li>Push notifications for all account activity</li>
+                <li>Savings account opening and management</li>
+            </ul>
+            <p><strong>Security requirements:</strong> Must pass the State Bank of Vietnam (SBV) Circular 09/2020 security audit before production launch.</p>
+        ]]></field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="date_end">2026-09-30</field>
+        <field name="manager_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="customer_id" ref="agentx_project_management.partner_vietbank_financial"/>
+    </record>
+
+    <!-- == Team Members == -->
+
+    <record id="team_bank_pm" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="employee_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="role">pm</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="allocation_percent">40.0</field>
+        <field name="notes">Senior PM overseeing both this and one other project. Manages VietBank IT Director relationship and coordinates with the SBV audit team.</field>
+    </record>
+
+    <record id="team_bank_lead_dev" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="employee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="allocation_percent">20.0</field>
+        <field name="notes">Part-time lead developer (also on E-Commerce project). Owns mobile security architecture, authentication flows, and security code reviews.</field>
+    </record>
+
+    <record id="team_bank_backend" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="employee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="role">dev</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="allocation_percent">100.0</field>
+        <field name="notes">Backend developer focused on core banking API integration, transaction processing, and Napas 247 interbank transfer gateway.</field>
+    </record>
+
+    <record id="team_bank_qa" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="employee_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="role">qa</field>
+        <field name="date_start">2026-03-15</field>
+        <field name="allocation_percent">70.0</field>
+        <field name="notes">QA lead for security-focused testing. Responsible for OWASP Mobile Top 10 testing, penetration test coordination, and SBV audit documentation.</field>
+    </record>
+
+    <record id="team_bank_devops" model="agentx.team.member">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="employee_id" ref="agentx_project_management.employee_bui_duc_nam"/>
+        <field name="role">devops</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="allocation_percent">60.0</field>
+        <field name="notes">DevOps engineer responsible for secure infrastructure setup on VietBank's private cloud, SSL/TLS certificate management, and security monitoring.</field>
+    </record>
+
+    <!-- == Sprints == -->
+
+    <record id="sprint_bank_1" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Sprint 1 — Authentication &amp; Security Core</field>
+        <field name="sequence">1</field>
+        <field name="state">completed</field>
+        <field name="goal">Deliver a fully secure authentication foundation: biometric login (Face ID/Touch ID/Fingerprint), OTP-based 2FA, PIN setup and reset, and session management. All components must pass internal security review before Sprint 2.</field>
+        <field name="date_start">2026-03-02</field>
+        <field name="date_end">2026-03-29</field>
+        <field name="capacity">40</field>
+        <field name="velocity">39</field>
+    </record>
+
+    <record id="sprint_bank_2" model="agentx.sprint">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Sprint 2 — Account Overview &amp; Transactions</field>
+        <field name="sequence">2</field>
+        <field name="state">active</field>
+        <field name="goal">Build the account dashboard (balances, account details, mini-statement) and transaction history module with search, filtering by date/amount/type, and PDF e-statement download.</field>
+        <field name="date_start">2026-04-01</field>
+        <field name="date_end">2026-04-26</field>
+        <field name="capacity">40</field>
+    </record>
+
+    <!-- == Tasks — Sprint 1 (all done) == -->
+
+    <record id="task_bank_s1_biometric" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="name">Biometric Authentication — Face ID, Touch ID &amp; Android Fingerprint</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-03-22</field>
+        <field name="date_started">2026-03-02 09:00:00</field>
+        <field name="date_done">2026-03-21 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_authentication'))]"/>
+        <field name="description"><![CDATA[<p>Implement biometric authentication using iOS LocalAuthentication framework (Face ID + Touch ID) and Android BiometricPrompt API (fingerprint + face unlock). Biometric keys stored in Secure Enclave (iOS) and Android Keystore. Fall back to PIN if biometric fails 3 times.</p>]]></field>
+        <field name="acceptance_criteria">Biometric login completes in under 2 seconds. Biometric keys are device-bound (not transferable). Enrollment required before biometric can be used. 3 failed attempts triggers fallback to PIN. Biometric data never leaves the device.</field>
+    </record>
+
+    <record id="task_bank_s1_otp_2fa" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="name">OTP Two-Factor Authentication via SMS</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-18</field>
+        <field name="date_started">2026-03-03 09:00:00</field>
+        <field name="date_done">2026-03-17 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_authentication'))]"/>
+        <field name="description"><![CDATA[<p>Implement SMS OTP for high-risk operations (first login on new device, fund transfers above 10M VND, changing security settings). 6-digit OTP, valid for 90 seconds, max 3 attempts. Integrate VietTel SMS gateway API. Rate-limit OTP requests to prevent SMS flooding.</p>]]></field>
+        <field name="acceptance_criteria">OTP delivered via VietTel SMS within 15 seconds (P95). OTP expires after 90 seconds. 3 failed OTP attempts locks the operation for 10 minutes. OTP requests rate-limited to 3 per 5 minutes per phone number.</field>
+    </record>
+
+    <record id="task_bank_s1_jwt_token" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="name">JWT Token Management, Refresh &amp; Secure Storage</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_deadline">2026-03-15</field>
+        <field name="date_started">2026-03-05 09:00:00</field>
+        <field name="date_done">2026-03-14 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Implement RS256 JWT access tokens (15-minute TTL) with rotating refresh tokens (30-day TTL) stored in the device Keychain (iOS) and EncryptedSharedPreferences (Android). Implement silent token refresh. Revoke all tokens on logout and on security event detection.</p>]]></field>
+        <field name="acceptance_criteria">Access tokens expire after 15 minutes. Refresh tokens rotate on use (refresh token rotation). Tokens stored in OS secure storage — not in app sandbox. All tokens revoked on explicit logout. Concurrent session limit: 3 devices per user.</field>
+    </record>
+
+    <record id="task_bank_s1_pin_setup" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="name">PIN Setup, Change &amp; Reset Flow</field>
+        <field name="task_type">story</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">20.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-24</field>
+        <field name="date_started">2026-03-10 09:00:00</field>
+        <field name="date_done">2026-03-24 16:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_mobile'))]"/>
+        <field name="description"><![CDATA[<p>Implement 6-digit PIN authentication: initial setup on first login, PIN change (requires OTP verification), PIN reset via registered phone number + OTP. PIN is hashed with bcrypt + per-user salt before storage. Block sequential numbers and repeated digits.</p>]]></field>
+        <field name="acceptance_criteria">PIN stored as bcrypt hash — never in plaintext. Sequential PINs (123456, 654321) and repeated digit PINs (111111) rejected. PIN change requires current PIN + OTP. Failed PIN counter resets only on successful authentication. Account locked after 5 wrong PINs.</field>
+    </record>
+
+    <record id="task_bank_s1_security_audit_prep" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="name">Security Audit Preparation &amp; OWASP Mobile Top 10 Review</field>
+        <field name="task_type">task</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="story_points">5</field>
+        <field name="estimated_hours">16.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-03-28</field>
+        <field name="date_started">2026-03-18 09:00:00</field>
+        <field name="date_done">2026-03-28 17:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_security')), (4, ref('agentx_project_management.tag_testing'))]"/>
+        <field name="description"><![CDATA[<p>Conduct OWASP Mobile Security Testing Guide (MSTG) review of the Sprint 1 authentication codebase. Document findings, classify risk levels, and create remediation tickets for any M1–M10 issues. Prepare audit checklist for SBV Circular 09/2020 compliance.</p>]]></field>
+        <field name="acceptance_criteria">All OWASP Mobile Top 10 items assessed. No Critical or High severity unresolved findings. SBV Circular 09/2020 compliance checklist completed. Penetration test scope document prepared for external auditor.</field>
+    </record>
+
+    <!-- == Tasks — Sprint 2 (active — in progress / todo) == -->
+
+    <record id="task_bank_s2_account_dashboard" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="name">Account Balance Dashboard &amp; Multi-Account Overview</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-18</field>
+        <field name="date_started">2026-04-01 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_frontend'))]"/>
+        <field name="description"><![CDATA[<p>Build the home screen account dashboard: list all customer accounts (savings, checking, term deposits) with masked balance display (toggle to reveal), account number (last 4 digits shown), and account type icons. Total net worth summary at the top. Swipe between accounts.</p>]]></field>
+        <field name="acceptance_criteria">Balance hidden by default — revealed by tap-and-hold for security. Multi-account list scrollable. Total net worth calculated in real-time from Core Banking API. Screen loads within 1.5 seconds. Balance data encrypted in local app cache (30-second TTL).</field>
+    </record>
+
+    <record id="task_bank_s2_transaction_history" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="name">Transaction History with Search &amp; Filters</field>
+        <field name="task_type">story</field>
+        <field name="state">in_progress</field>
+        <field name="priority">2</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-20</field>
+        <field name="date_started">2026-04-02 09:00:00</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Build the transaction history screen: display 90 days of transactions with infinite scroll (20 per page), search by description or amount, filter by transaction type (debit/credit/transfer), date range picker, and amount range. Transaction detail view with full metadata.</p>]]></field>
+        <field name="acceptance_criteria">History loads within 2 seconds for 90-day period. Infinite scroll adds next page without full reload. Search results update as user types (debounced 300ms). PDF e-statement downloadable for any 3-month period. Transaction data encrypted at rest.</field>
+    </record>
+
+    <record id="task_bank_s2_fund_transfer" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="name">Fund Transfer — Same-Bank &amp; Napas 247 Interbank</field>
+        <field name="task_type">story</field>
+        <field name="state">todo</field>
+        <field name="priority">2</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="reviewer_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-24</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_security'))]"/>
+        <field name="description"><![CDATA[<p>Implement fund transfer: same-bank transfer (instant, 24/7), Napas 247 interbank transfer (instant, 24/7 for up to 500M VND). Both flows require OTP confirmation for amounts above 10M VND. Save beneficiaries for quick re-use. Transfer limit management per account type.</p>]]></field>
+        <field name="acceptance_criteria">Same-bank transfer completes in under 3 seconds. Napas 247 transfer completes in under 10 seconds. OTP required for amounts above 10M VND. Daily transfer limit enforced (configurable per account type). Duplicate transaction detection within 60-second window. All transactions logged to immutable audit trail.</field>
+    </record>
+
+    <record id="task_bank_s2_bill_payment" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="name">Bill Payment — Electricity, Water, Telecom &amp; Internet</field>
+        <field name="task_type">task</field>
+        <field name="state">todo</field>
+        <field name="priority">1</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="date_deadline">2026-04-25</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Build the bill payment module via VNPay's biller aggregator API: look up outstanding bills by customer code, display bill details, confirm payment with OTP, and receive payment confirmation. Support: EVN electricity, SAWACO water, Viettel/VinaPhone/MobiFone telecom, and FPT/VNPT internet.</p>]]></field>
+        <field name="acceptance_criteria">Bill lookup completes within 3 seconds. Payment confirmation displayed immediately. Receipt downloadable as PDF. Failed payments refunded within 30 minutes. Payment history categorized by biller type.</field>
+    </record>
+
+    <!-- == Backlog Tasks == -->
+
+    <record id="task_bank_backlog_napas_interbank" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Napas 247 Large Interbank Transfer (above 500M VND)</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">1</field>
+        <field name="story_points">21</field>
+        <field name="estimated_hours">60.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_integration')), (4, ref('agentx_project_management.tag_security'))]"/>
+        <field name="description"><![CDATA[<p>High-value transfers above 500M VND require additional security: two-factor authentication (PIN + OTP), relationship manager approval workflow for amounts above 2 billion VND, and integration with VietBank's core banking fraud detection system (AML screening).</p>]]></field>
+    </record>
+
+    <record id="task_bank_backlog_savings" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Savings Account Opening &amp; Term Deposit Management</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">0</field>
+        <field name="story_points">13</field>
+        <field name="estimated_hours">40.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_backend'))]"/>
+        <field name="description"><![CDATA[<p>Allow customers to open a savings account or fixed-term deposit directly in the app: select term length (1, 3, 6, 12, 24 months), view interest rate schedule, set maturity rollover option (auto-renew or credit to checking account), and view interest accrual in real-time.</p>]]></field>
+    </record>
+
+    <record id="task_bank_backlog_qr_payment" model="agentx.task">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">VietQR Code Payments (Scan &amp; Generate)</field>
+        <field name="task_type">story</field>
+        <field name="state">backlog</field>
+        <field name="priority">1</field>
+        <field name="story_points">8</field>
+        <field name="estimated_hours">24.0</field>
+        <field name="tag_ids" eval="[(4, ref('agentx_project_management.tag_mobile')), (4, ref('agentx_project_management.tag_integration'))]"/>
+        <field name="description"><![CDATA[<p>Implement VietQR standard for QR code payments: scan a VietQR code to pre-fill transfer details, generate a VietQR code to receive payment (static and dynamic with pre-filled amount), and confirm payment with biometric or PIN. Comply with Napas VietQR specification v2.0.</p>]]></field>
+    </record>
+
+    <!-- == Bugs == -->
+
+    <record id="bug_bank_001" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="related_task_id" ref="agentx_project_management.task_bank_s1_biometric"/>
+        <field name="name">Biometric authentication fails on Samsung Galaxy S24 Ultra (Android 14)</field>
+        <field name="state">confirmed</field>
+        <field name="priority">3</field>
+        <field name="severity">blocker</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="reported_by" ref="agentx_project_management.partner_vietbank_financial"/>
+        <field name="date_reported">2026-04-02</field>
+        <field name="date_confirmed">2026-04-04</field>
+        <field name="environment">Samsung Galaxy S24 Ultra — Android 14 (One UI 6.1), App version 0.3.1</field>
+        <field name="description"><![CDATA[<p>On Samsung Galaxy S24 Ultra running Android 14 (One UI 6.1), the biometric authentication screen shows briefly and then immediately dismisses without allowing the user to authenticate. The app falls through to the PIN screen without giving the user a chance to use fingerprint or face unlock.</p>]]></field>
+        <field name="steps_to_reproduce">1. Install app on Samsung Galaxy S24 Ultra (Android 14, One UI 6.1).
+2. Complete initial setup and PIN configuration.
+3. Enable biometric authentication in Security Settings.
+4. Lock the app and reopen.
+5. Biometric prompt appears for less than 500ms then disappears.
+6. User is taken directly to PIN entry screen.</field>
+        <field name="expected_behavior">Biometric authentication prompt should remain visible until the user authenticates with fingerprint/face or manually cancels to use PIN.</field>
+        <field name="actual_behavior">BiometricPrompt dismisses instantly on Samsung Galaxy S24 Ultra (Android 14). Investigation shows Samsung's One UI 6.1 changed the BiometricPrompt callback lifecycle — the BiometricPrompt.AuthenticationCallback.onAuthenticationError is immediately called with error code BIOMETRIC_ERROR_HW_NOT_PRESENT when using the default BiometricPrompt.PromptInfo builder without explicitly setting setConfirmationRequired(false).</field>
+    </record>
+
+    <record id="bug_bank_002" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_2"/>
+        <field name="related_task_id" ref="agentx_project_management.task_bank_s1_jwt_token"/>
+        <field name="name">Silent JWT refresh causes multiple simultaneous login prompts on slow network</field>
+        <field name="state">in_progress</field>
+        <field name="priority">3</field>
+        <field name="severity">critical</field>
+        <field name="assignee_id" ref="agentx_project_management.employee_hoang_van_long"/>
+        <field name="date_reported">2026-04-07</field>
+        <field name="date_confirmed">2026-04-08</field>
+        <field name="environment">All Android and iOS devices — 3G/slow WiFi (RTT above 500ms), App version 0.3.2</field>
+        <field name="description"><![CDATA[<p>On slow network connections (3G or congested WiFi), users are presented with 2–3 simultaneous login prompts when the silent JWT token refresh fails. Each failed API call independently triggers a token refresh attempt, resulting in a race condition where multiple refresh requests are sent to the server simultaneously.</p>]]></field>
+        <field name="steps_to_reproduce">1. Use the app on a throttled network (simulate 3G via device developer options: 1Mbps down, 500ms latency).
+2. Wait for the JWT access token to expire (15 minutes) while the app is in the foreground.
+3. Navigate quickly between screens that trigger 2+ API calls.
+4. Observe multiple "Session expired, please log in again" dialogs appearing on screen simultaneously.</field>
+        <field name="expected_behavior">When the access token expires, exactly one token refresh request should be made. All concurrent API calls should be queued and resume after successful token refresh. Only one login prompt should appear if the refresh token is also expired.</field>
+        <field name="actual_behavior">Multiple API calls each independently detect token expiry and trigger simultaneous refresh requests. Race condition results in some calls using an old invalidated token (rotation conflict) and 401 responses that each spawn their own login prompt dialog.</field>
+    </record>
+
+    <record id="bug_bank_003" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">App crashes with OutOfMemoryError when transaction history exceeds 500 items</field>
+        <field name="state">new</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="reported_by" ref="agentx_project_management.partner_vietbank_financial"/>
+        <field name="date_reported">2026-04-15</field>
+        <field name="environment">Devices with 3GB RAM — Android 12, Transaction list of 500+ items loaded</field>
+        <field name="description"><![CDATA[<p>The transaction history screen crashes with an OutOfMemoryError on devices with 3GB of RAM when the transaction list contains more than approximately 500 items loaded via infinite scroll. The crash does not occur on devices with 4GB+ RAM.</p>]]></field>
+        <field name="steps_to_reproduce">1. Use a test account with 600+ transactions in the last 90 days.
+2. Open Transaction History screen on a device with 3GB RAM (e.g., Samsung A-series or mid-range devices).
+3. Scroll to the bottom of the list several times to trigger infinite scroll loads.
+4. After loading approximately 500 items, the app crashes with an OutOfMemoryError.
+5. Crash reported via Firebase Crashlytics: java.lang.OutOfMemoryError: Failed to allocate a 4194320-byte allocation.</field>
+        <field name="expected_behavior">Transaction history should display smoothly for any number of items using virtual/lazy list rendering. Only visible items should be rendered in memory at any given time.</field>
+        <field name="actual_behavior">All loaded transaction items are kept in memory simultaneously. The RecyclerView is not recycling view holders efficiently — each transaction card inflates a complex view with a merchant logo image that is not being released when scrolled off screen.</field>
+    </record>
+
+    <record id="bug_bank_004" model="agentx.bug">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="sprint_id" ref="agentx_project_management.sprint_bank_1"/>
+        <field name="related_task_id" ref="agentx_project_management.task_bank_s1_otp_2fa"/>
+        <field name="name">OTP SMS delivery intermittently delayed by 3–5 minutes via VietTel gateway</field>
+        <field name="state">new</field>
+        <field name="priority">2</field>
+        <field name="severity">major</field>
+        <field name="reported_by" ref="agentx_project_management.partner_vietbank_financial"/>
+        <field name="date_reported">2026-04-10</field>
+        <field name="environment">VietTel SIM cards — intermittent, approximately 8% of OTP requests</field>
+        <field name="description"><![CDATA[<p>Approximately 8% of OTP SMS messages sent via the VietTel SMS gateway are delayed by 3–5 minutes. Since the OTP expires after 90 seconds, users receiving delayed OTPs are unable to complete their transactions and must request a new OTP. This is particularly problematic for fund transfers where user frustration is highest.</p>]]></field>
+        <field name="steps_to_reproduce">1. Initiate a fund transfer above 10M VND.
+2. Request OTP — system sends via VietTel gateway.
+3. In ~8% of cases, the SMS is not received within 90 seconds (OTP window).
+4. User requests resend — may also be delayed.
+5. Eventually (3–5 minutes later) multiple OTPs arrive simultaneously — all expired.</field>
+        <field name="expected_behavior">OTP SMS should be delivered within 15 seconds (P95) to all major Vietnamese carriers (VietTel, VinaPhone, MobiFone). Expired OTPs should not be deliverable — gateway should cancel queued SMS older than 90 seconds.</field>
+        <field name="actual_behavior">VietTel gateway queues messages during peak hours (12–2pm, 6–9pm) and delivers them in batches with significant delays. Using FPT Telecom as a backup SMS gateway for non-VietTel numbers is recommended as a mitigation.</field>
+    </record>
+
+    <!-- == Milestones == -->
+
+    <record id="milestone_bank_1" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Security Core Completed &amp; Internal Penetration Test Passed</field>
+        <field name="date_deadline">2026-04-30</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_vo_thi_mai"/>
+        <field name="description">Authentication module (biometric, OTP, PIN, JWT) completed, all OWASP Mobile Top 10 findings resolved, and internal penetration test passed with no Critical or High severity findings. Pre-requisite for SBV external audit.</field>
+    </record>
+
+    <record id="milestone_bank_2" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Beta Release to 1,000 VietBank Staff Testers</field>
+        <field name="date_deadline">2026-06-15</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="description">Full feature set (auth, account overview, transactions, fund transfer, bill payments) available for internal beta testing with 1,000 VietBank employees. Feedback collection via in-app survey. Bug bash event scheduled for 2026-06-20.</field>
+    </record>
+
+    <record id="milestone_bank_3" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">SBV Circular 09/2020 External Audit Passed</field>
+        <field name="date_deadline">2026-07-31</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_nguyen_duc_thanh"/>
+        <field name="description">External security audit by SBV-approved auditor completed. All mandatory requirements of Circular 09/2020/TT-NHNN met. Audit certificate received. Pre-requisite for production launch approval from VietBank's Board of Directors.</field>
+    </record>
+
+    <record id="milestone_bank_4" model="agentx.milestone">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Production Launch on App Store &amp; Google Play</field>
+        <field name="date_deadline">2026-09-15</field>
+        <field name="state">pending</field>
+        <field name="responsible_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="description">Public launch on Apple App Store (iOS 16+) and Google Play Store (Android 11+). Phased rollout: 10% of customers in week 1, 50% in week 2, 100% in week 3. 24/7 hypercare support team on standby for the first 30 days post-launch.</field>
+    </record>
+
+    <!-- == Acceptance Criteria == -->
+
+    <record id="acceptance_bank_security" model="agentx.acceptance">
+        <field name="project_id" ref="agentx_project_management.project_banking"/>
+        <field name="name">Authentication &amp; Security Compliance (SBV Circular 09/2020)</field>
+        <field name="state">in_review</field>
+        <field name="reviewer_id" ref="agentx_project_management.employee_tran_van_minh"/>
+        <field name="date_submitted">2026-04-10</field>
+        <field name="description"><![CDATA[<p>Security acceptance criteria aligned with State Bank of Vietnam (SBV) Circular 09/2020/TT-NHNN requirements for mobile banking applications. Under review — biometric Android bug is blocking criteria 2.</p>]]></field>
+        <field name="review_notes">Criteria 1, 4, and 5 passed. Criteria 2 blocked by BUG-BANK-001 (Android biometric failure on Samsung). Criteria 3 partially passed — OTP delivery intermittently slow (BUG-BANK-004 under investigation). Criteria 6 not yet tested (pending external audit).</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_1" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">10</field>
+        <field name="description">Biometric authentication (Face ID, Touch ID) works correctly on all supported iOS devices (iOS 16+) using the native LocalAuthentication framework</field>
+        <field name="result">pass</field>
+        <field name="notes">Tested on iPhone 13, 14, 15 series and iPad Pro. Face ID and Touch ID both function correctly. Fallback to PIN on 3 failed biometric attempts confirmed.</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_2" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">20</field>
+        <field name="description">Biometric authentication works correctly on all supported Android devices (Android 11+) including Samsung One UI 6.1 and Xiaomi MIUI 14</field>
+        <field name="result">fail</field>
+        <field name="notes">BLOCKED — BUG-BANK-001 open. Fails on Samsung Galaxy S24 Ultra (Android 14, One UI 6.1). Works on Pixel 8, Xiaomi 13T, and Oppo Reno 10. Fix in progress — expect resolution by 2026-04-22.</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_3" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">30</field>
+        <field name="description">OTP via SMS is delivered within 30 seconds for 95% of requests across all major Vietnamese carriers (VietTel, VinaPhone, MobiFone)</field>
+        <field name="result">na</field>
+        <field name="notes">Partially passing. VietTel delivery exceeds 90 seconds for ~8% of requests during peak hours (BUG-BANK-004). VinaPhone and MobiFone delivery consistently under 15 seconds. Multi-gateway failover solution being evaluated.</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_4" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">40</field>
+        <field name="description">User session is automatically terminated after 10 minutes of inactivity, requiring re-authentication via biometric or PIN</field>
+        <field name="result">pass</field>
+        <field name="notes">Session timeout tested with 10-minute timer. App returns to lock screen after inactivity. Background/foreground transitions handled correctly — timer pauses when app is backgrounded.</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_5" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">50</field>
+        <field name="description">All data transmission between the mobile app and backend is encrypted using TLS 1.2 or higher with certificate pinning to prevent MITM attacks</field>
+        <field name="result">pass</field>
+        <field name="notes">TLS 1.3 confirmed via Charles Proxy intercept test. Certificate pinning verified — proxy certificate rejected correctly. Public key pinning implemented using OkHttp CertificatePinner (Android) and TrustKit (iOS).</field>
+    </record>
+
+    <record id="acceptance_line_bank_sec_6" model="agentx.acceptance.line">
+        <field name="acceptance_id" ref="agentx_project_management.acceptance_bank_security"/>
+        <field name="sequence">60</field>
+        <field name="description">Application passes all 25 mandatory security requirements defined in SBV Circular 09/2020/TT-NHNN as verified by an SBV-approved external auditor</field>
+        <field name="result">na</field>
+        <field name="notes">External audit not yet scheduled. Planned for July 2026. Internal self-assessment checklist completed — 23 of 25 requirements confirmed. 2 items pending: high-value transfer approval workflow (Sprint 4) and fraud detection AML integration (Sprint 5).</field>
+    </record>
+
+</odoo>
