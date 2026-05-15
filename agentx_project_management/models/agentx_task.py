@@ -54,6 +54,7 @@ class AgentxTask(models.Model):
             ('backlog', 'Backlog'),
             ('todo', 'To Do'),
             ('in_progress', 'In Progress'),
+            ('in_review', 'In Review'),
             ('blocked', 'Blocked'),
             ('done', 'Done'),
             ('cancelled', 'Cancelled'),
@@ -79,7 +80,7 @@ class AgentxTask(models.Model):
     acceptance_criteria = fields.Text(string='Acceptance Criteria')
     block_reason = fields.Text(string='Block Reason')
 
-    # ── Project / Sprint ──────────────────────────────────────────────────────
+    # ── Project / Sprint / Request ────────────────────────────────────────────
     project_id = fields.Many2one(
         comodel_name='agentx.project',
         string='Project',
@@ -92,7 +93,15 @@ class AgentxTask(models.Model):
         comodel_name='agentx.sprint',
         string='Sprint',
         tracking=True,
-        domain="[('project_id', '=', project_id), ('state', 'in', ['draft', 'active'])]",
+        domain="[('project_id', '=', project_id), ('state', 'in', ['planning', 'active'])]",
+    )
+    request_id = fields.Many2one(
+        comodel_name='agentx.customer.request',
+        string='Customer Request',
+        tracking=True,
+        index=True,
+        domain="[('project_id', '=', project_id)]",
+        help='Customer request that originated this task.',
     )
 
     # ── People ────────────────────────────────────────────────────────────────
@@ -165,9 +174,19 @@ class AgentxTask(models.Model):
                     % (task.sprint_id.name, task.project_id.name)
                 )
 
+    @api.constrains('state', 'sprint_id')
+    def _check_todo_requires_sprint(self):
+        """CHK-05: Tasks in 'To Do' state must have a sprint assigned."""
+        for task in self:
+            if task.state == 'todo' and not task.sprint_id:
+                raise ValidationError(
+                    _("Task '%s' must be assigned to a sprint before moving to 'To Do'.")
+                    % task.name
+                )
+
     # ── State machine actions ─────────────────────────────────────────────────
     def action_plan(self):
-        """Transition Backlog → To Do (add to sprint)."""
+        """Transition Backlog → To Do (assign to sprint)."""
         for task in self:
             if task.state != 'backlog':
                 raise UserError(_("Only backlog tasks can be planned."))
@@ -191,7 +210,9 @@ class AgentxTask(models.Model):
             if task.state != 'in_progress':
                 raise UserError(_("Only in-progress tasks can be blocked."))
             task.state = 'blocked'
-            task.message_post(body=_("Task blocked. Reason: %s") % (task.block_reason or ''))
+            task.message_post(
+                body=_("Task blocked. Reason: %s") % (task.block_reason or '')
+            )
 
     def action_unblock(self):
         """Transition Blocked → In Progress."""
@@ -204,11 +225,27 @@ class AgentxTask(models.Model):
             })
             task.message_post(body=_("Task unblocked."))
 
-    def action_done(self):
-        """Transition In Progress → Done."""
+    def action_submit_review(self):
+        """Transition In Progress → In Review."""
         for task in self:
-            if task.state not in ('in_progress', 'todo'):
-                raise UserError(_("Only in-progress or planned tasks can be marked as done."))
+            if task.state != 'in_progress':
+                raise UserError(_("Only in-progress tasks can be submitted for review."))
+            task.state = 'in_review'
+            task.message_post(body=_("Task submitted for review."))
+
+    def action_reject_review(self):
+        """Transition In Review → In Progress (review rejected)."""
+        for task in self:
+            if task.state != 'in_review':
+                raise UserError(_("Only tasks under review can be rejected back to in-progress."))
+            task.state = 'in_progress'
+            task.message_post(body=_("Review rejected. Task returned to in progress."))
+
+    def action_done(self):
+        """Transition In Review → Done."""
+        for task in self:
+            if task.state != 'in_review':
+                raise UserError(_("Only tasks that passed review can be marked as done."))
             task.write({
                 'state': 'done',
                 'date_done': fields.Datetime.now(),

@@ -10,7 +10,8 @@
         <field name="arch" type="xml">
             <list string="Projects" decoration-muted="state == 'cancelled'"
                   decoration-success="state == 'done'"
-                  decoration-info="state == 'in_progress'">
+                  decoration-info="state == 'active'"
+                  decoration-warning="state == 'on_hold'">
                 <field name="code" optional="show"/>
                 <field name="name"/>
                 <field name="manager_id"/>
@@ -20,7 +21,8 @@
                 <field name="priority" widget="priority"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'done'"
-                       decoration-info="state == 'in_progress'"
+                       decoration-info="state == 'active'"
+                       decoration-warning="state == 'on_hold'"
                        decoration-muted="state == 'cancelled'"/>
                 <field name="completion_rate" widget="progressbar"/>
                 <field name="sprint_count" string="Sprints" optional="show"/>
@@ -39,20 +41,26 @@
         <field name="arch" type="xml">
             <form string="Project">
                 <header>
-                    <button name="action_start" string="Start" type="object"
+                    <button name="action_start" string="Activate" type="object"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
+                    <button name="action_hold" string="Put On Hold" type="object"
+                            invisible="state != 'active'"
+                            confirm="Are you sure you want to put this project on hold?"/>
+                    <button name="action_reactivate" string="Reactivate" type="object"
+                            class="btn-primary"
+                            invisible="state != 'on_hold'"/>
                     <button name="action_done" string="Close Project" type="object"
                             class="btn-primary"
-                            invisible="state != 'in_progress'"
+                            invisible="state != 'active'"
                             confirm="Are you sure you want to close this project?"/>
                     <button name="action_cancel" string="Cancel" type="object"
-                            invisible="state not in ('draft', 'in_progress')"
+                            invisible="state not in ('draft', 'active', 'on_hold')"
                             confirm="Are you sure you want to cancel this project?"/>
                     <button name="action_reset_to_draft" string="Reset to Draft" type="object"
                             invisible="state != 'cancelled'"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,in_progress,done"/>
+                           statusbar_visible="draft,active,on_hold,done"/>
                 </header>
                 <sheet>
                     <!-- Stat buttons -->
@@ -69,6 +77,10 @@
                                 class="oe_stat_button" icon="fa-bug">
                             <field name="open_bug_count" widget="statinfo" string="Open Bugs"/>
                         </button>
+                        <button name="action_view_requests" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="request_count" widget="statinfo" string="Requests"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
@@ -80,12 +92,15 @@
                         <group>
                             <field name="code"/>
                             <field name="manager_id"/>
+                            <field name="team_lead_id"/>
                             <field name="customer_id"/>
                             <field name="priority" widget="priority"/>
                         </group>
                         <group>
                             <field name="date_start"/>
                             <field name="date_end"/>
+                            <field name="estimated_hours"/>
+                            <field name="actual_hours"/>
                             <field name="completion_rate" widget="progressbar"/>
                         </group>
                     </group>
@@ -94,13 +109,25 @@
                     </group>
                     <notebook>
                         <page string="Team" name="team">
-                            <field name="team_ids">
+                            <field name="allocation_ids">
                                 <list editable="bottom">
                                     <field name="employee_id"/>
                                     <field name="role"/>
                                     <field name="allocation_percent"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Resource Allocations" name="resource_allocations">
+                            <field name="resource_allocation_ids">
+                                <list editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="role"/>
+                                    <field name="allocation_pct" string="Allocation (%)"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="notes" optional="show"/>
                                 </list>
                             </field>
                         </page>
@@ -113,7 +140,26 @@
                                     <field name="state" widget="badge"/>
                                     <field name="task_count"/>
                                     <field name="done_task_count"/>
+                                    <field name="total_story_points" optional="show"/>
+                                    <field name="completed_story_points" optional="show"/>
+                                    <field name="progress_pct" optional="show"/>
                                     <field name="completion_rate" widget="progressbar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Customer Requests" name="requests">
+                            <field name="request_ids">
+                                <list>
+                                    <field name="code" optional="show"/>
+                                    <field name="name"/>
+                                    <field name="customer_id"/>
+                                    <field name="assigned_to_id"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'approved'"
+                                           decoration-info="state in ('confirmed', 'in_analysis')"
+                                           decoration-danger="state == 'rejected'"/>
+                                    <field name="task_count"/>
                                 </list>
                             </field>
                         </page>
@@ -138,7 +184,8 @@
                                     <field name="name"/>
                                     <field name="reviewer_id"/>
                                     <field name="state" widget="badge"
-                                           decoration-success="state == 'approved'"
+                                           decoration-success="state == 'accepted'"
+                                           decoration-info="state == 'submitted'"
                                            decoration-danger="state == 'rejected'"/>
                                     <field name="criteria_count"/>
                                     <field name="passed_count"/>
@@ -212,10 +259,12 @@
                 <field name="code"/>
                 <field name="manager_id"/>
                 <field name="customer_id"/>
-                <filter string="In Progress" name="in_progress"
-                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Active" name="active"
+                        domain="[('state', '=', 'active')]"/>
                 <filter string="Draft" name="draft"
                         domain="[('state', '=', 'draft')]"/>
+                <filter string="On Hold" name="on_hold"
+                        domain="[('state', '=', 'on_hold')]"/>
                 <filter string="Done" name="done"
                         domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="cancelled"
