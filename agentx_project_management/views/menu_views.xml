@@ -87,6 +87,29 @@
               groups="agentx_project_management.group_agentx_user"/>
 
     <!-- ================================================================== -->
+    <!-- Customer Requests                                                  -->
+    <!-- ================================================================== -->
+    <menuitem id="menu_agentx_requests"
+              name="Requests"
+              parent="menu_agentx_root"
+              sequence="35"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <menuitem id="menu_agentx_all_requests"
+              name="All Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request"
+              sequence="10"
+              groups="agentx_project_management.group_agentx_manager"/>
+
+    <menuitem id="menu_agentx_my_requests"
+              name="My Requests"
+              parent="menu_agentx_requests"
+              action="action_agentx_customer_request_my"
+              sequence="20"
+              groups="agentx_project_management.group_agentx_user"/>
+
+    <!-- ================================================================== -->
     <!-- Bugs                                                               -->
     <!-- ================================================================== -->
     <menuitem id="menu_agentx_bugs"
@@ -133,6 +156,13 @@
               parent="menu_agentx_root"
               sequence="99"
               groups="agentx_project_management.group_agentx_admin"/>
+
+    <menuitem id="menu_agentx_resource_allocations"
+              name="Resource Allocations"
+              parent="menu_agentx_config"
+              action="action_agentx_resource_allocation"
+              sequence="5"
+              groups="agentx_project_management.group_agentx_manager"/>
 
     <menuitem id="menu_agentx_tags"
               name="Tags"
